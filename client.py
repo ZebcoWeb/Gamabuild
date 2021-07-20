@@ -204,7 +204,7 @@ async def sold(ctx , id:int , img):
             await ctx.reply('> **Product status changed to sold!**')
         else:
             await ctx.reply(f'> **This product does not exist in the {channel.mention} channel!**')
-    else:
+    elif id or img == None:
         await ctx.reply('> `{PREFIX}sold [Massage ID]`')
 
 
