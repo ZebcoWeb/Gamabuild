@@ -147,6 +147,7 @@ async def create(ctx):
     await ctx.reply('> **Ticket has been made!**')
 
 
+#send product
 @commands.has_permissions(manage_guild=True)
 @client.command()
 async def exclusive(ctx , *,args=None):
@@ -154,6 +155,7 @@ async def exclusive(ctx , *,args=None):
         await ctx.reply(f'> `{PREFIX}exclusive [Image Link] ^ [Post Link]`')
     else:
         channel = client.get_channel(866752986083491840)
+        role_mention = ctx.guild.get_role(866976860625043456)
         argslist = args.split('^')
         image_url = argslist[0]
         post_url = argslist[1]
@@ -164,11 +166,16 @@ async def exclusive(ctx , *,args=None):
             )
         em.set_image(url=image_url)
         em.set_footer(text='Press the "Follow" button if you like to get notified when we upload our exclusive maps!')
-        image_msg = await channel.send(embed=em)
-        await ctx.reply(f'> **Message sent.**')
+        comp = [
+            [
+            Button(style=ButtonStyle.green,emoji=client.get_emoji(867001613990363159),label='Follow',id='follow_button'),
+            ]
+        ]
+        product = await channel.send(embed=em,components=comp,content=f'||{role_mention.mention}||')
+        await ctx.reply(f'> **Product sent.**\nmsg ID: `{product.id}`')
 
 
-
+#product change status
 @commands.has_permissions(manage_guild=True)
 @client.command()
 async def sold(ctx , id:int , img):
@@ -186,19 +193,47 @@ async def sold(ctx , id:int , img):
                 )
             em.set_image(url=img)
             em.set_footer(text='Press the "Follow" button if you like to get notified when we upload our exclusive maps!')
-            await msg.edit(embed=em)
-            await ctx.reply('> **This msg edited!**')
+            comp = [
+                [
+            Button(style=ButtonStyle.green,emoji=client.get_emoji(867001613990363159),label='Follow',id='follow_button'),
+                ]
+                   ]
+            await msg.edit(embed=em,components=comp)
+            await ctx.reply('> **Product status changed to sold!**')
         else:
-            await ctx.reply('> **This msg is from other channel!**')
+            await ctx.reply(f'> **This product does not exist in the {channel.mention} channel!**')
     else:
-        await ctx.reply('> `{PREFIX}delete [Massage ID]`')
+        await ctx.reply('> `{PREFIX}sold [Massage ID]`')
 
 
+    #clear msg
+@commands.has_permissions(manage_guild=True)
+@client.command()
+async def clear(ctx , number:int):
+    await ctx.channel.purge(limit=number+1)
+    await ctx.reply(f'`{number}` message deleted!')
 
-
+#follow button
+@client.event
+async def on_button_click(res):
+    guild = res.guild
+    channel_product = client.get_channel(866752986083491840)
+    payload_button = res.component
+    channel = res.message.channel
+    member = guild.get_member(res.user.id)
+    if payload_button.id == 'follow_button' and channel == channel_product:
+        role_mention = guild.get_role(866976860625043456)
+        if role_mention not in member.roles:
+            await member.add_roles(role_mention)
+            em = discord.Embed(description='🔔 Channel notifications are enabled for you.',color=0x17d34f)
+            await member.send(embed=em)
+        else:
+            em = discord.Embed(description=':exclamation: You have already followed this channel.',color=0xFF0000)
+            await member.send(embed=em)
+    await res.respond(type=6)
+    
 
 #reaction tracker
-
 @client.event
 async def on_raw_reaction_add(payload):
     #ticket_reaction_tracker
