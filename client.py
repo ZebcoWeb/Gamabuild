@@ -139,15 +139,18 @@ async def create(ctx):
     channel = client.get_channel(789777105201397811)
     embed = discord.Embed(
         title="Please react with <:ticket1:841743660622282762> to open a ticket.",
-        description='''By clicking the <:ticket1:841743660622282762> you can create a ticket and order your custom made minecraft maps/project.
+        description='''By clicking the <:tickett:867127185134714910> you can create a ticket and order your custom made minecraft maps/project.
         **Make sure to click the icon if you have an order.**''',
         color=0xFB005B
     )
     embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/841291473332207662/841744350962909184/Ticket.png')
     embed.set_footer(text= 'GamaBuild Team' , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
-
-    message_create = await channel.send(embed=embed)
-    await message_create.add_reaction("<:ticket1:841743660622282762>")
+    comp = [
+                [
+            Button(style=ButtonStyle.green,emoji=client.get_emoji(867127185134714910),label='Create Ticket',id='ticket_button'),
+                ]
+           ]
+    message_create = await channel.send(embed=embed,components=comp)
     await ctx.reply('> **Ticket has been made!**')
 
 
@@ -225,6 +228,7 @@ async def on_button_click(res):
     guild = res.guild
     channel_product = client.get_channel(866752986083491840)
     channel_verify = client.get_channel(842431646648369224)
+    channel_ticket = client.get_channel(789777105201397811)
     payload_button = res.component
     channel = res.message.channel
     member = guild.get_member(res.user.id)
@@ -270,30 +274,16 @@ async def on_button_click(res):
         else:
             pass
 
-    await res.respond(type=6)
-    
-
-#reaction tracker
-@client.event
-async def on_raw_reaction_add(payload):
-    #ticket_reaction_tracker
-    if payload.message_id == 842795228527067198 and payload.user_id != 840644679358873642:
-        guild = client.get_guild(payload.guild_id)
-        channel = client.get_channel(payload.channel_id)
-        message = await channel.fetch_message(payload.message_id)
-        user = client.get_user(payload.user_id)
-        emoji = "<:ticket1:841743660622282762>"
-        # builder_role = guild.get_role(769896654832664596)
-        await message.remove_reaction(emoji, user)
-
+    #ticket
+    if payload_button.id == 'ticket_button' and channel == channel_ticket and member.id != 840644679358873642:
         ticketscat = client.get_channel(789787201981382656)
         overwrites = {
             guild.default_role: discord.PermissionOverwrite(read_messages=False),
             guild.me: discord.PermissionOverwrite(read_messages=True),
-            user: discord.PermissionOverwrite(read_messages=True)
+            member: discord.PermissionOverwrite(read_messages=True)
             # builder_role: discord.PermissionOverwrite(read_messages=True)
         }
-        title = '╠'+user.name
+        title = '╠'+member.name
         created = await ticketscat.create_text_channel(title, overwrites=overwrites)
 
         embed = discord.Embed(
@@ -301,37 +291,11 @@ async def on_raw_reaction_add(payload):
             description="You have successfully created a ticket. Please wait for the response of team members/Or you can ask your question here and wait for team members to response.",
             color=0xFB005B
         )
-        embed.set_thumbnail(url=user.avatar_url)
+        embed.set_thumbnail(url=member.avatar_url)
         embed.set_footer(text="GamaBuild Team" , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
-        await created.send(embed=embed, content=user.mention)
+        await created.send(embed=embed, content=member.mention)
 
-    #verify_reaction_tracker
-    elif payload.message_id == 843067411343343616 and payload.user_id != 840644679358873642:
-        guild = client.get_guild(payload.guild_id)
-        channel = client.get_channel(payload.channel_id)
-        channel_join = client.get_channel(847806714840875069)
-        massage = await channel.fetch_message(payload.message_id)
-        member = guild.get_member(payload.user_id)
-        role = guild.get_role(842843180608127038)
-        new_role = guild.get_role(781407403211620393)
-        role_members = discord.utils.get(role.members , id=payload.user_id)
-        if role_members is not None:
-            emoji = '<:omo_vmark:789798349569654805>'
-            await member.add_roles(new_role)
-            await member.remove_roles(role)
-            await massage.remove_reaction(emoji , member)
-            em = discord.Embed(
-            title= f'**{member.name} <:omo_vmark:789798349569654805>**' ,
-            description = f'ID: ``{member.id}``' ,
-            color=0xFB005B
-            )
-            em.set_thumbnail(url= member.avatar_url)
-            await channel_join.send(embed=em)
-        else:
-            emoji = '<:omo_vmark:789798349569654805>'
-            await massage.remove_reaction(emoji , member)
-    else:
-        pass
+    await res.respond(type=6)
 
 
 @commands.has_permissions(manage_guild=True)
