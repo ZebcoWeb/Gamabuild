@@ -1,12 +1,13 @@
-import discord
+from asyncio import *
 from discord import channel
 from discord import embeds
 from discord.ext import commands , tasks
-import asyncio
-from asyncio import *
-import io
-import aiohttp
 from discord_components import *
+import aiohttp
+import asyncio
+import discord
+import io
+import re
 
 TOKEN = "ODQwNjQ0Njc5MzU4ODczNjQy.YJbNXQ.IOx_JzwkI510F85xDIHUpSLohvw"
 PREFIX = '-'
@@ -177,17 +178,21 @@ async def exclusive(ctx , *,args=None):
 
 @commands.has_permissions(manage_guild=True)
 @client.command()
-async def delete(ctx , id:int = None):
+async def sold(ctx , id:int , img):
     channel = client.get_channel(866752986083491840)
     msg = await channel.fetch_message(id)
-    if id != None:
+    if id or img != None:
         if msg.channel == channel:
-            image = msg.embeds[0].image.url
+            detail = msg.embeds[0].description
+            url = re.search('\(.*\)', detail)
+            url = url.group()
             em = discord.Embed(
-                title='<:Warn:866761211945156628> Map sold!',
+                title='<:Sold:866977659334557716> This map has been sold!',
+                description=f'>>> Full Detail of the map [Click here]{url}',
                 color=0xFB005B,
                 )
-            em.set_image(url=image)
+            em.set_image(url=img)
+            em.set_footer(text='Press the "Follow" button if you like to get notified when we upload our exclusive maps!')
             await msg.edit(embed=em)
             await ctx.reply('> **This msg edited!**')
         else:
