@@ -147,15 +147,6 @@ async def create(ctx):
     await ctx.reply('> **Ticket has been made!**')
 
 
-# async def img_file (url):
-#     async with aiohttp.ClientSession() as session:
-#         async with session.get(url) as resp:
-#             if resp.status != 200:
-#                 return await channel.send('Could not download file...')
-#             data = io.BytesIO(await resp.read())
-#             file = discord.File(data , 'map.png')
-#             return file
-
 @commands.has_permissions(manage_guild=True)
 @client.command()
 async def exclusive(ctx , *,args=None):
@@ -174,6 +165,8 @@ async def exclusive(ctx , *,args=None):
         em.set_image(url=image_url)
         em.set_footer(text='Press the "Follow" button if you like to get notified when we upload our exclusive maps!')
         image_msg = await channel.send(embed=em)
+        await ctx.reply(f'> **Message sent.**')
+
 
 
 @commands.has_permissions(manage_guild=True)
