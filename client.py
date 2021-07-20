@@ -169,6 +169,7 @@ async def exclusive(ctx , *,args=None):
         comp = [
             [
             Button(style=ButtonStyle.green,emoji=client.get_emoji(867001613990363159),label='Follow',id='follow_button'),
+            Button(style=ButtonStyle.red,emoji=client.get_emoji(867082989363658773),label='Unfollow',id='unfollow_button'),
             ]
         ]
         product = await channel.send(embed=em,components=comp,content=f'||{role_mention.mention}||')
@@ -196,6 +197,7 @@ async def sold(ctx , id:int , img):
             comp = [
                 [
             Button(style=ButtonStyle.green,emoji=client.get_emoji(867001613990363159),label='Follow',id='follow_button'),
+            Button(style=ButtonStyle.red,emoji=client.get_emoji(867082989363658773),label='Unfollow',id='unfollow_button'),
                 ]
                    ]
             await msg.edit(embed=em,components=comp)
@@ -221,15 +223,28 @@ async def on_button_click(res):
     payload_button = res.component
     channel = res.message.channel
     member = guild.get_member(res.user.id)
+    role_mention = guild.get_role(866976860625043456)
+
+    #follow
     if payload_button.id == 'follow_button' and channel == channel_product:
-        role_mention = guild.get_role(866976860625043456)
         if role_mention not in member.roles:
             await member.add_roles(role_mention)
-            em = discord.Embed(description='🔔 Channel notifications are enabled for you.',color=0x17d34f)
+            em = discord.Embed(description='<:notiff:867001613990363159> Channel notifications are enabled for you.',color=0x17d34f)
             await member.send(embed=em)
         else:
-            em = discord.Embed(description=':exclamation: You have already followed this channel.',color=0xFF0000)
+            em = discord.Embed(description=':exclamation: You have already __Followed__ this channel.',color=0xFF0000)
             await member.send(embed=em)
+
+    #unfollow        
+    if payload_button.id == 'unfollow_button' and channel == channel_product:
+        if role_mention in member.roles:
+            await member.remove_roles(role_mention)
+            em = discord.Embed(description='<:notiffoff:867082989363658773> Channel notifications are disabled for you.',color=0x17d34f)
+            await member.send(embed=em)
+        else:
+            em = discord.Embed(description=':exclamation: You have already __Unfollowed__ this channel.',color=0xFF0000)
+            await member.send(embed=em)
+
     await res.respond(type=6)
     
 
