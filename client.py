@@ -117,13 +117,17 @@ Make yourself home , there are many places you can check here and explore such a
 :interrobang: -FAQ : If you're still confused by the glory of this planet feel free to read this section 
 
 Now , there are many robots among the travelers and they are not accepted in this community ! you're not a robot are you traveler ?
-click on <:omo_vmark:789798349569654805> and verify yourself !''',
+click on <:verifyy:867000676452925450> and verify yourself !''',
         color=0xFB005B
     )
     embed.set_footer(text= 'GamaBuild Team' , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
     embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/803345280828571688/843054375278215178/Welcome.png')
-    massage = await channel.send(embed=embed)
-    await massage.add_reaction("<:omo_vmark:789798349569654805>")
+    comp = [
+                [
+            Button(style=ButtonStyle.green,emoji=client.get_emoji(867000676452925450),label='Verify',id='verify_button'),
+                ]
+           ]
+    massage = await channel.send(embed=embed,components=comp)
     await ctx.reply('> **Verify has been made!**')
 
 
@@ -179,7 +183,7 @@ async def exclusive(ctx , *,args=None):
 #product change status
 @commands.has_permissions(manage_guild=True)
 @client.command()
-async def sold(ctx , id:int , img):
+async def sold(ctx , id:int = None, img = None):
     channel = client.get_channel(866752986083491840)
     msg = await channel.fetch_message(id)
     if id or img != None:
@@ -204,10 +208,10 @@ async def sold(ctx , id:int , img):
             await ctx.reply('> **Product status changed to sold!**')
         else:
             await ctx.reply(f'> **This product does not exist in the {channel.mention} channel!**')
-    elif id or img == None:
+    else:
         await ctx.reply('> `{PREFIX}sold [Massage ID]`')
 
-
+    
     #clear msg
 @commands.has_permissions(manage_guild=True)
 @client.command()
@@ -220,6 +224,7 @@ async def clear(ctx , number:int):
 async def on_button_click(res):
     guild = res.guild
     channel_product = client.get_channel(866752986083491840)
+    channel_verify = client.get_channel(842431646648369224)
     payload_button = res.component
     channel = res.message.channel
     member = guild.get_member(res.user.id)
@@ -244,6 +249,26 @@ async def on_button_click(res):
         else:
             em = discord.Embed(description=':exclamation: You have already __Unfollowed__ this channel.',color=0xFF0000)
             await member.send(embed=em)
+
+    #verify
+    if payload_button.id == 'verify_button' and channel == channel_verify:
+        role_default = guild.get_role(781407403211620393)
+        role = guild.get_role(842843180608127038)
+        channel_join = client.get_channel(847806714840875069)
+        if role_default not in member.roles:
+            emoji = '<:omo_vmark:789798349569654805>'
+            await member.add_roles(role_default)
+            await member.remove_roles(role)
+            #log
+            em = discord.Embed(
+            title= f'**{member.name} <:omo_vmark:789798349569654805>**' ,
+            description = f'ID: ``{member.id}``' ,
+            color=0xFB005B
+            )
+            em.set_thumbnail(url= member.avatar_url)
+            await channel_join.send(embed=em)
+        else:
+            pass
 
     await res.respond(type=6)
     
