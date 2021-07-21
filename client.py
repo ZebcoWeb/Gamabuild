@@ -75,7 +75,7 @@ async def new (ctx , *, args=None):
         except IndexError:
             pass
         finally:
-            await channel.send(embed=embed)
+            await channel.send(embed=embed,content='@everyone')
             await ctx.reply(f'> **Message sent.**')
 
 @commands.has_permissions(manage_guild=True)
