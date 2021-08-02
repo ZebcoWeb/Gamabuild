@@ -121,7 +121,7 @@ click on <:verifyy:867000676452925450> and verify yourself !''',
         color=0xFB005B
     )
     embed.set_footer(text= 'GamaBuild Team' , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
-    embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/803345280828571688/843054375278215178/Welcome.png')
+    embed.set_thumbnail(url='https://media.discordapp.net/attachments/779789524431536129/871700348534947900/Rules.png')
     comp = [
                 [
             Button(style=ButtonStyle.green,emoji=client.get_emoji(867000676452925450),label='Verify',id='verify_button'),
@@ -152,6 +152,35 @@ async def create(ctx):
            ]
     message_create = await channel.send(embed=embed,components=comp)
     await ctx.reply('> **Ticket has been made!**')
+
+#Terms
+@commands.has_permissions(manage_guild=True)
+@client.command(aliases=["terms",'Terms'])
+async def _terms(ctx:commands.Context):
+    term_channel = client.get_channel(769856028425977876)
+    embed=discord.Embed(
+        title="<a:OK:866760492545343499> **TERMS OF SERVICE**",
+     description='''
+<:Rules1:871703799918657558> Our work comes with quality , detail and attention to your personal liking and for that reason we do not accept any negotiation for the price !
+
+<:Rules2:871704398810726432> The funds and chargebacks are decided by us to protect the rights of our team and our dear clients .
+
+<:Rules3:871704922465398905> Products you receive from us do not have resell rights in any ways .
+
+<a:MC:866762262227714069> **OUR WAYS**
+
+<:Rules4:871705388918128640> We are flexible with our work and respect our clients opinion so...edits and small changes are always available .
+
+<:Rules5:871710416110248006> Making new and impossible styles is a pleasant practice for us so...don't be afraid to bring your own ideas to us !
+
+By opening a <#789777105201397811> you agree to all of these terms !
+''',
+      color=0xFB005B
+    )
+    embed.set_thumbnail(url='https://media.discordapp.net/attachments/779789524431536129/871700348534947900/Rules.png')
+    embed.set_footer(text= 'GamaBuild Team' , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
+    await term_channel.send(embed=embed)
+    await ctx.reply('> **Terms has been made!**')
 
 
 #send product
