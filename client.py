@@ -18,7 +18,6 @@ intents.reactions = True
 client = commands.Bot(command_prefix=PREFIX, intents=intents)
 client.remove_command('help')
 
-#My name is Zebco
 
 @client.event
 async def on_ready():
