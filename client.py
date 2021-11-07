@@ -7,7 +7,7 @@ from discord.enums import ButtonStyle
 from discord.ext import commands
 
 
-TOKEN = "ODQwNjQ0Njc5MzU4ODczNjQy.YJbNXQ.pwd35VGa4MXtOZPd-tPxdx2FU-4"
+TOKEN = "ODQwNjQ0Njc5MzU4ODczNjQy.YJbNXQ.dYsvxAn9gT4i1cMM_CaD0vJL01A"
 PREFIX = '-'
 
 client = commands.Bot(
