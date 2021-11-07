@@ -1,13 +1,9 @@
-from asyncio import *
-from discord import channel
-from discord import embeds
-from discord.ext import commands , tasks
-from discord_components import *
-import aiohttp
 import asyncio
 import discord
-import io
 import re
+
+from discord.ext import commands
+from discord_components import *
 
 TOKEN = "ODQwNjQ0Njc5MzU4ODczNjQy.YJbNXQ.IOx_JzwkI510F85xDIHUpSLohvw"
 PREFIX = '-'
