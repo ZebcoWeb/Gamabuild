@@ -6,7 +6,7 @@ from discord.ext import commands
 from discord_components import *
 
 TOKEN = "ODQwNjQ0Njc5MzU4ODczNjQy.YJbNXQ.IOx_JzwkI510F85xDIHUpSLohvw"
-PREFIX = '-'
+PREFIX = '='
 
 intents = discord.Intents.all()
 intents.members = True
