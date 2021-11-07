@@ -7,7 +7,7 @@ from discord.enums import ButtonStyle
 from discord.ext import commands
 
 
-TOKEN = "ODQwNjQ0Njc5MzU4ODczNjQy.YJbNXQ.yBitRHXrpZT-BdK-Z_lkh0N-y8k"
+TOKEN = "ODQwNjQ0Njc5MzU4ODczNjQy.YJbNXQ.pwd35VGa4MXtOZPd-tPxdx2FU-4"
 PREFIX = '-'
 
 client = commands.Bot(
@@ -342,82 +342,6 @@ async def sold(ctx , id:int = None, img = None):
 async def clear(ctx , number:int):
     await ctx.channel.purge(limit=number+1)
     await ctx.reply(f'`{number}` message deleted!')
-
-#follow button
-# @client.event
-# async def on_button_click(res):
-#     guild = res.guild
-#     channel_product = client.get_channel(866752986083491840)
-#     channel_verify = client.get_channel(842431646648369224)
-#     channel_ticket = client.get_channel(789777105201397811)
-#     payload_button = res.component
-#     channel = res.message.channel
-#     member = guild.get_member(res.user.id)
-#     role_mention = guild.get_role(866976860625043456)
-
-#     #follow
-#     if payload_button.id == 'follow_button' and channel == channel_product:
-#         if role_mention not in member.roles:
-#             await member.add_roles(role_mention)
-#             em = discord.Embed(description='<:notiff:867001613990363159> Channel notifications are enabled for you.',color=0x17d34f)
-#             await member.send(embed=em)
-#         else:
-#             em = discord.Embed(description=':exclamation: You have already __Followed__ this channel.',color=0xFF0000)
-#             await member.send(embed=em)
-
-#     #unfollow        
-#     if payload_button.id == 'unfollow_button' and channel == channel_product:
-#         if role_mention in member.roles:
-#             await member.remove_roles(role_mention)
-#             em = discord.Embed(description='<:notiffoff:867082989363658773> Channel notifications are disabled for you.',color=0x17d34f)
-#             await member.send(embed=em)
-#         else:
-#             em = discord.Embed(description=':exclamation: You have already __Unfollowed__ this channel.',color=0xFF0000)
-#             await member.send(embed=em)
-
-#     #verify
-#     if payload_button.id == 'verify_button' and channel == channel_verify:
-#         role_default = guild.get_role(781407403211620393)
-#         role = guild.get_role(842843180608127038)
-#         channel_join = client.get_channel(847806714840875069)
-#         if role_default not in member.roles:
-#             emoji = '<:omo_vmark:789798349569654805>'
-#             await member.add_roles(role_default)
-#             await member.remove_roles(role)
-#             #log
-#             em = discord.Embed(
-#             title= f'**{member.name} <:omo_vmark:789798349569654805>**' ,
-#             description = f'ID: ``{member.id}``' ,
-#             color=0xFB005B
-#             )
-#             em.set_thumbnail(url= member.avatar.url)
-#             await channel_join.send(embed=em)
-#         else:
-#             pass
-
-#     #ticket
-#     if payload_button.id == 'ticket_button' and channel == channel_ticket and member.id != 840644679358873642:
-#         ticketscat = client.get_channel(789787201981382656)
-#         overwrites = {
-#             guild.default_role: discord.PermissionOverwrite(read_messages=False),
-#             guild.me: discord.PermissionOverwrite(read_messages=True),
-#             member: discord.PermissionOverwrite(read_messages=True)
-#             # builder_role: discord.PermissionOverwrite(read_messages=True)
-#         }
-#         title = '╠'+member.name
-#         created = await ticketscat.create_text_channel(title, overwrites=overwrites)
-
-#         embed = discord.Embed(
-#             title="Please be patient while team members handle this ticket.",
-#             description="You have successfully created a ticket. Please wait for the response of team members/Or you can ask your question here and wait for team members to response.",
-#             color=0xFB005B
-#         )
-#         embed.set_thumbnail(url=member.avatar.url)
-#         embed.set_footer(text="GamaBuild Team" , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
-#         await created.send(embed=embed, content=member.mention)
-
-#     await res.respond(type=6)
-
 
 @commands.has_permissions(manage_guild=True)
 @client.command()
