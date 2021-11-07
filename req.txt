@@ -1,0 +1,4 @@
+py-cord @ https://github.com/Pycord-Development/pycord/archive/refs/heads/master.zip
+requests
+six
+discord-components
