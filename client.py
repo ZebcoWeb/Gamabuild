@@ -2,23 +2,32 @@ import asyncio
 import discord
 import re
 
+from discord.enums import ButtonStyle
+
 from discord.ext import commands
-from discord_components import *
 
-TOKEN = "ODQwNjQ0Njc5MzU4ODczNjQy.YJbNXQ.IOx_JzwkI510F85xDIHUpSLohvw"
-PREFIX = '='
 
-intents = discord.Intents.all()
-intents.members = True
-intents.reactions = True
-client = commands.Bot(command_prefix=PREFIX, intents=intents)
-client.remove_command('help')
+TOKEN = "ODQwNjQ0Njc5MzU4ODczNjQy.YJbNXQ.yBitRHXrpZT-BdK-Z_lkh0N-y8k"
+PREFIX = '-'
 
+client = commands.Bot(
+command_prefix=PREFIX,
+help_command=None,
+intents=discord.Intents.all()
+)
+client.persistent_views_added = False
 
 @client.event
 async def on_ready():
     print("Alright we are ready! - Gama Team")
-    DiscordComponents(client)
+
+    if not client.persistent_views_added:
+            client.add_view(VerifyView())
+            client.add_view(TicketView())
+            client.add_view(FollowView())
+            client.persistent_views_added = True
+
+
     guild = client.get_guild(769855661223313413)
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f'{guild.member_count} Members'))
 
@@ -34,7 +43,7 @@ async def on_member_join(member):
     description = f'ID: ``{member.id}``' ,
     color=0xFB005B
     )
-    em.set_thumbnail(url= member.avatar_url)
+    em.set_thumbnail(url= member.avatar.url)
     await channel.send(embed=em)
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f'{guild.member_count} Members'))
 
@@ -47,9 +56,119 @@ async def on_member_remove(member):
     description = f'ID: ``{member.id}``' ,
     color=0xFB005B
     )
-    em.set_thumbnail(url= member.avatar_url)
+    em.set_thumbnail(url= member.avatar.url)
     await channel.send(embed=em)
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f'{guild.member_count} Members'))
+
+    # ------
+    # Views
+    # ------
+
+verify_emoji = '<:verifyy:867000676452925450>'
+ticket_emoji = '<:tickett:867127185134714910>'
+follow_emoji = '<:notiff:867001613990363159>'
+unfollow_emoji = '<:notiffoff:867082989363658773>'
+
+class VerifyView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.channel_verify = client.get_channel(842431646648369224)
+
+    @discord.ui.button(label='Verify', custom_id='verify_button', style=ButtonStyle.green, emoji=verify_emoji)
+    async def verify_user(self, button: discord.ui.Button, interaction: discord.Interaction):
+        member = interaction.user
+        guild = interaction.guild
+        channel = interaction.channel 
+        if channel == self.channel_verify:
+            role_default = guild.get_role(781407403211620393)
+            role = guild.get_role(842843180608127038)
+            channel_join = client.get_channel(847806714840875069)
+            if role_default not in member.roles:
+                emoji = '<:omo_vmark:789798349569654805>'
+                await member.add_roles(role_default)
+                await member.remove_roles(role)
+                #log
+                em = discord.Embed(
+                title= f'**{member.name} <:omo_vmark:789798349569654805>**' ,
+                description = f'ID: ``{member.id}``' ,
+                color=0xFB005B
+                )
+                em.set_thumbnail(url= member.avatar.url)
+                await channel_join.send(embed=em)
+            else:
+                pass
+        await interaction.response.defer(ephemeral=True)
+
+
+class TicketView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.channel_ticket = client.get_channel(789777105201397811)
+        self.ticketscat = client.get_channel(789787201981382656)
+
+    @discord.ui.button(label='Create Ticket', custom_id='ticket_button', style=ButtonStyle.green, emoji=ticket_emoji)
+    async def create_ticket(self, button: discord.ui.Button, interaction: discord.Interaction):
+        member = interaction.user
+        guild = interaction.guild
+        channel = interaction.channel
+
+        if channel == self.channel_ticket and member.id != 840644679358873642:
+            overwrites = {
+                guild.default_role: discord.PermissionOverwrite(read_messages=False),
+                guild.me: discord.PermissionOverwrite(read_messages=True),
+                member: discord.PermissionOverwrite(read_messages=True)
+            }
+            title = '╠ '+member.name
+            created = await self.ticketscat.create_text_channel(title, overwrites=overwrites)
+
+            embed = discord.Embed(
+                title="Please be patient while team members handle this ticket.",
+                description="You have successfully created a ticket. Please wait for the response of team members/Or you can ask your question here and wait for team members to response.",
+                color=0xFB005B
+            )
+            embed.set_thumbnail(url=member.avatar.url)
+            embed.set_footer(text="GamaBuild Team" , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
+            await created.send(embed=embed, content=member.mention)
+        await interaction.response.defer(ephemeral=True)
+
+
+class FollowView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.channel_product = client.get_channel(866752986083491840)
+
+    @discord.ui.button(label='Follow', custom_id='follow_button', style=ButtonStyle.green, emoji=follow_emoji)
+    async def follow(self, button: discord.ui.Button, interaction: discord.Interaction):
+        channel = interaction.channel
+        if self.channel_product == channel:
+            guild = interaction.guild
+            member = interaction.user
+            role_mention = guild.get_role(866976860625043456)
+
+            if role_mention not in member.roles:
+                await member.add_roles(role_mention)
+                em = discord.Embed(description='<:notiff:867001613990363159> Channel notifications are enabled for you.',  color=0x17d34f)
+                await member.send(embed=em)
+            else:
+                em = discord.Embed(description=':exclamation: You have already __Followed__ this channel.',color=0xFF0000)
+                await member.send(embed=em)
+        await interaction.response.defer(ephemeral=True)
+
+    @discord.ui.button(label='Unfollow', custom_id='unfollow_button', style=ButtonStyle.red, emoji=unfollow_emoji)
+    async def unfollow(self, button: discord.ui.Button, interaction: discord.Interaction):
+        guild = interaction.guild
+        member = interaction.user
+        role_mention = guild.get_role(866976860625043456)
+        if role_mention in member.roles:
+            await member.remove_roles(role_mention)
+            em = discord.Embed(description='<:notiffoff:867082989363658773> Channel notifications are disabled for you.',color=0x17d34f)
+            await member.send(embed=em)
+        else:
+            em = discord.Embed(description=':exclamation: You have already __Unfollowed__ this channel.',color=0xFF0000)
+            await member.send(embed=em)
+        await interaction.response.defer(ephemeral=True)
+
+    # --------------------------------
 
 @commands.has_permissions(manage_guild=True)
 @client.command()
@@ -117,12 +236,7 @@ click on <:verifyy:867000676452925450> and verify yourself !''',
     )
     embed.set_footer(text= 'GamaBuild Team' , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
     embed.set_thumbnail(url='https://media.discordapp.net/attachments/779789524431536129/871700348534947900/Rules.png')
-    comp = [
-                [
-            Button(style=ButtonStyle.green,emoji=client.get_emoji(867000676452925450),label='Verify',id='verify_button'),
-                ]
-           ]
-    massage = await channel.send(embed=embed,components=comp)
+    await channel.send(embed=embed, view=VerifyView())
     await ctx.reply('> **Verify has been made!**')
 
 
@@ -140,12 +254,7 @@ async def create(ctx):
     )
     embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/841291473332207662/841744350962909184/Ticket.png')
     embed.set_footer(text= 'GamaBuild Team' , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
-    comp = [
-                [
-            Button(style=ButtonStyle.green,emoji=client.get_emoji(867127185134714910),label='Create Ticket',id='ticket_button'),
-                ]
-           ]
-    message_create = await channel.send(embed=embed,components=comp)
+    message_create = await channel.send(embed=embed, view=TicketView())
     await ctx.reply('> **Ticket has been made!**')
 
 #Terms
@@ -197,13 +306,7 @@ async def exclusive(ctx , *,args=None):
             )
         em.set_image(url=image_url)
         em.set_footer(text='Press the "Follow" button if you like to get notified when we upload our exclusive maps!')
-        comp = [
-            [
-            Button(style=ButtonStyle.green,emoji=client.get_emoji(867001613990363159),label='Follow',id='follow_button'),
-            Button(style=ButtonStyle.red,emoji=client.get_emoji(867082989363658773),label='Unfollow',id='unfollow_button'),
-            ]
-        ]
-        product = await channel.send(embed=em,components=comp,content=f'||{role_mention.mention}||')
+        product = await channel.send(embed=em, view=FollowView(), content=f'||{role_mention.mention}||')
         await ctx.reply(f'> **Product sent.**\nmsg ID: `{product.id}`')
 
 
@@ -225,13 +328,7 @@ async def sold(ctx , id:int = None, img = None):
                 )
             em.set_image(url=img)
             em.set_footer(text='Press the "Follow" button if you like to get notified when we upload our exclusive maps!')
-            comp = [
-                [
-            Button(style=ButtonStyle.green,emoji=client.get_emoji(867001613990363159),label='Follow',id='follow_button'),
-            Button(style=ButtonStyle.red,emoji=client.get_emoji(867082989363658773),label='Unfollow',id='unfollow_button'),
-                ]
-                   ]
-            await msg.edit(embed=em,components=comp)
+            await msg.edit(embed=em, view=FollowView())
             await ctx.reply('> **Product status changed to sold!**')
         else:
             await ctx.reply(f'> **This product does not exist in the {channel.mention} channel!**')
@@ -247,79 +344,79 @@ async def clear(ctx , number:int):
     await ctx.reply(f'`{number}` message deleted!')
 
 #follow button
-@client.event
-async def on_button_click(res):
-    guild = res.guild
-    channel_product = client.get_channel(866752986083491840)
-    channel_verify = client.get_channel(842431646648369224)
-    channel_ticket = client.get_channel(789777105201397811)
-    payload_button = res.component
-    channel = res.message.channel
-    member = guild.get_member(res.user.id)
-    role_mention = guild.get_role(866976860625043456)
+# @client.event
+# async def on_button_click(res):
+#     guild = res.guild
+#     channel_product = client.get_channel(866752986083491840)
+#     channel_verify = client.get_channel(842431646648369224)
+#     channel_ticket = client.get_channel(789777105201397811)
+#     payload_button = res.component
+#     channel = res.message.channel
+#     member = guild.get_member(res.user.id)
+#     role_mention = guild.get_role(866976860625043456)
 
-    #follow
-    if payload_button.id == 'follow_button' and channel == channel_product:
-        if role_mention not in member.roles:
-            await member.add_roles(role_mention)
-            em = discord.Embed(description='<:notiff:867001613990363159> Channel notifications are enabled for you.',color=0x17d34f)
-            await member.send(embed=em)
-        else:
-            em = discord.Embed(description=':exclamation: You have already __Followed__ this channel.',color=0xFF0000)
-            await member.send(embed=em)
+#     #follow
+#     if payload_button.id == 'follow_button' and channel == channel_product:
+#         if role_mention not in member.roles:
+#             await member.add_roles(role_mention)
+#             em = discord.Embed(description='<:notiff:867001613990363159> Channel notifications are enabled for you.',color=0x17d34f)
+#             await member.send(embed=em)
+#         else:
+#             em = discord.Embed(description=':exclamation: You have already __Followed__ this channel.',color=0xFF0000)
+#             await member.send(embed=em)
 
-    #unfollow        
-    if payload_button.id == 'unfollow_button' and channel == channel_product:
-        if role_mention in member.roles:
-            await member.remove_roles(role_mention)
-            em = discord.Embed(description='<:notiffoff:867082989363658773> Channel notifications are disabled for you.',color=0x17d34f)
-            await member.send(embed=em)
-        else:
-            em = discord.Embed(description=':exclamation: You have already __Unfollowed__ this channel.',color=0xFF0000)
-            await member.send(embed=em)
+#     #unfollow        
+#     if payload_button.id == 'unfollow_button' and channel == channel_product:
+#         if role_mention in member.roles:
+#             await member.remove_roles(role_mention)
+#             em = discord.Embed(description='<:notiffoff:867082989363658773> Channel notifications are disabled for you.',color=0x17d34f)
+#             await member.send(embed=em)
+#         else:
+#             em = discord.Embed(description=':exclamation: You have already __Unfollowed__ this channel.',color=0xFF0000)
+#             await member.send(embed=em)
 
-    #verify
-    if payload_button.id == 'verify_button' and channel == channel_verify:
-        role_default = guild.get_role(781407403211620393)
-        role = guild.get_role(842843180608127038)
-        channel_join = client.get_channel(847806714840875069)
-        if role_default not in member.roles:
-            emoji = '<:omo_vmark:789798349569654805>'
-            await member.add_roles(role_default)
-            await member.remove_roles(role)
-            #log
-            em = discord.Embed(
-            title= f'**{member.name} <:omo_vmark:789798349569654805>**' ,
-            description = f'ID: ``{member.id}``' ,
-            color=0xFB005B
-            )
-            em.set_thumbnail(url= member.avatar_url)
-            await channel_join.send(embed=em)
-        else:
-            pass
+#     #verify
+#     if payload_button.id == 'verify_button' and channel == channel_verify:
+#         role_default = guild.get_role(781407403211620393)
+#         role = guild.get_role(842843180608127038)
+#         channel_join = client.get_channel(847806714840875069)
+#         if role_default not in member.roles:
+#             emoji = '<:omo_vmark:789798349569654805>'
+#             await member.add_roles(role_default)
+#             await member.remove_roles(role)
+#             #log
+#             em = discord.Embed(
+#             title= f'**{member.name} <:omo_vmark:789798349569654805>**' ,
+#             description = f'ID: ``{member.id}``' ,
+#             color=0xFB005B
+#             )
+#             em.set_thumbnail(url= member.avatar.url)
+#             await channel_join.send(embed=em)
+#         else:
+#             pass
 
-    #ticket
-    if payload_button.id == 'ticket_button' and channel == channel_ticket and member.id != 840644679358873642:
-        ticketscat = client.get_channel(789787201981382656)
-        overwrites = {
-            guild.default_role: discord.PermissionOverwrite(read_messages=False),
-            guild.me: discord.PermissionOverwrite(read_messages=True),
-            member: discord.PermissionOverwrite(read_messages=True)
-            # builder_role: discord.PermissionOverwrite(read_messages=True)
-        }
-        title = '╠'+member.name
-        created = await ticketscat.create_text_channel(title, overwrites=overwrites)
+#     #ticket
+#     if payload_button.id == 'ticket_button' and channel == channel_ticket and member.id != 840644679358873642:
+#         ticketscat = client.get_channel(789787201981382656)
+#         overwrites = {
+#             guild.default_role: discord.PermissionOverwrite(read_messages=False),
+#             guild.me: discord.PermissionOverwrite(read_messages=True),
+#             member: discord.PermissionOverwrite(read_messages=True)
+#             # builder_role: discord.PermissionOverwrite(read_messages=True)
+#         }
+#         title = '╠'+member.name
+#         created = await ticketscat.create_text_channel(title, overwrites=overwrites)
 
-        embed = discord.Embed(
-            title="Please be patient while team members handle this ticket.",
-            description="You have successfully created a ticket. Please wait for the response of team members/Or you can ask your question here and wait for team members to response.",
-            color=0xFB005B
-        )
-        embed.set_thumbnail(url=member.avatar_url)
-        embed.set_footer(text="GamaBuild Team" , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
-        await created.send(embed=embed, content=member.mention)
+#         embed = discord.Embed(
+#             title="Please be patient while team members handle this ticket.",
+#             description="You have successfully created a ticket. Please wait for the response of team members/Or you can ask your question here and wait for team members to response.",
+#             color=0xFB005B
+#         )
+#         embed.set_thumbnail(url=member.avatar.url)
+#         embed.set_footer(text="GamaBuild Team" , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
+#         await created.send(embed=embed, content=member.mention)
 
-    await res.respond(type=6)
+#     await res.respond(type=6)
 
 
 @commands.has_permissions(manage_guild=True)
