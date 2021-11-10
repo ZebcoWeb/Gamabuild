@@ -1,13 +1,14 @@
 import asyncio
 import discord
 import re
+import os
 
 from discord.enums import ButtonStyle
 
 from discord.ext import commands
 
 
-TOKEN = "ODQwNjQ0Njc5MzU4ODczNjQy.YJbNXQ.dYsvxAn9gT4i1cMM_CaD0vJL01A"
+TOKEN = os.getenv.get('BOTTOKEN')
 PREFIX = '-'
 
 client = commands.Bot(
@@ -68,6 +69,7 @@ verify_emoji = '<:verifyy:867000676452925450>'
 ticket_emoji = '<:tickett:867127185134714910>'
 follow_emoji = '<:notiff:867001613990363159>'
 unfollow_emoji = '<:notiffoff:867082989363658773>'
+download_emoji = '<:download:908033302345179136>'
 
 class VerifyView(discord.ui.View):
     def __init__(self):
@@ -84,7 +86,6 @@ class VerifyView(discord.ui.View):
             role = guild.get_role(842843180608127038)
             channel_join = client.get_channel(847806714840875069)
             if role_default not in member.roles:
-                emoji = '<:omo_vmark:789798349569654805>'
                 await member.add_roles(role_default)
                 await member.remove_roles(role)
                 #log
@@ -170,12 +171,37 @@ class FollowView(discord.ui.View):
 
     # --------------------------------
 
+#ticket
+
 @commands.has_permissions(manage_guild=True)
-@client.command()
-async def new (ctx , *, args=None):
-    global PREFIX
+@client.command(aliases=["help"])
+async def _help(ctx):
+    """Manage server commands help"""
+    
+    commands = client.commands
+    help_des = []
+
+    for c in commands:
+        aliases = '|'.join(c.aliases)
+        help = c.help if c.help else 'No help'
+        help_des.append(f'``{PREFIX}{aliases}`` - {help}\n')
+    help_des = '\n'.join(help_des)
+
+    embed = discord.Embed(
+        title = f'<:Rules4:871705388918128640> {client.user.name} manage commands help',
+        description = help_des,
+        color = 0xFB005B
+    )
+    embed.set_footer(text= 'GamaBuild Team' , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
+    
+    await ctx.send(embed=embed)
+
+@commands.has_permissions(manage_guild=True)
+@client.command(aliases=["new"])
+async def _new (ctx , *, args=None):
+    """send embed news: `-new [Tilte]^[Description]^[Image = Optional]`"""
     if args == None:
-        await ctx.reply(f'> `{PREFIX}new [Tilte] ^ [Description] ^ [Image = Optional]`')
+        await ctx.reply(f'> `{PREFIX}new [Tilte]^[Description]^[Image = Optional]`')
     else:
         channel = client.get_channel(781409442545008640)
         argslist = args.split('^')
@@ -193,11 +219,11 @@ async def new (ctx , *, args=None):
             await ctx.reply(f'> **Message sent.**')
 
 @commands.has_permissions(manage_guild=True)
-@client.command()
-async def insta (ctx , *, args=None):
-    global PREFIX
+@client.command(aliases=["insta"])
+async def _insta(ctx , *, args=None):
+    """Send msg to insta channel: `-insta [Tilte]^[Description]^[Image = Optional]`"""
     if args == None:
-        await ctx.reply(f'> `{PREFIX}insta [Tilte] ^ [Description] ^ [Image = Optional]`')
+        await ctx.reply(f'> `{PREFIX}insta [Tilte]^[Description]^[Image = Optional]`')
     else:
         channel = client.get_channel(841982534502187008)
         argslist = args.split('^')
@@ -216,8 +242,9 @@ async def insta (ctx , *, args=None):
 
 #verify
 @commands.has_permissions(manage_guild=True)
-@client.command()
-async def verify(ctx):
+@client.command(aliases=["verify"])
+async def _verify(ctx):
+    """Create new `Verify` message"""
     channel = client.get_channel(842431646648369224)
     embed = discord.Embed(
         title='Hey There Traveler !',
@@ -235,16 +262,15 @@ click on <:verifyy:867000676452925450> and verify yourself !''',
         color=0xFB005B
     )
     embed.set_footer(text= 'GamaBuild Team' , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
-    embed.set_thumbnail(url='https://media.discordapp.net/attachments/779789524431536129/871700348534947900/Rules.png')
+    embed.set_thumbnail(url='https://media.discordapp.net/attachments/779789524431536129/907567032453718026/Welcome.png')
     await channel.send(embed=embed, view=VerifyView())
     await ctx.reply('> **Verify has been made!**')
 
 
-#ticket
-
 @commands.has_permissions(manage_guild=True)
-@client.command()
-async def create(ctx):
+@client.command(aliases=["create"])
+async def _create(ctx):
+    """Create new `Create ticket` message"""
     channel = client.get_channel(789777105201397811)
     embed = discord.Embed(
         title="Please react with <:ticket1:841743660622282762> to open a ticket.",
@@ -254,13 +280,14 @@ async def create(ctx):
     )
     embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/841291473332207662/841744350962909184/Ticket.png')
     embed.set_footer(text= 'GamaBuild Team' , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
-    message_create = await channel.send(embed=embed, view=TicketView())
+    await channel.send(embed=embed, view=TicketView())
     await ctx.reply('> **Ticket has been made!**')
 
 #Terms
 @commands.has_permissions(manage_guild=True)
-@client.command(aliases=["terms",'Terms'])
+@client.command(aliases=["terms"])
 async def _terms(ctx:commands.Context):
+    """Create new `TERMS OF SERVICE` message"""
     term_channel = client.get_channel(769856028425977876)
     embed=discord.Embed(
         title="<a:OK:866760492545343499> **TERMS OF SERVICE**",
@@ -289,31 +316,40 @@ By opening a <#789777105201397811> you agree to all of these terms !
 
 #send product
 @commands.has_permissions(manage_guild=True)
-@client.command()
-async def exclusive(ctx , *,args=None):
+@client.command(aliases=["exclusive"])
+async def _exclusive(ctx , *,args=None):
+    """Send exclusive product: `-exclusive [Image Link]^[Download link]`"""
     if args == None:
-        await ctx.reply(f'> `{PREFIX}exclusive [Image Link] ^ [Post Link]`')
+        await ctx.reply(f'> `{PREFIX}exclusive [Image Link]^[Download link]`')
     else:
         channel = client.get_channel(866752986083491840)
         role_mention = ctx.guild.get_role(866976860625043456)
         argslist = args.split('^')
         image_url = argslist[0]
-        post_url = argslist[1]
+        dl_url = argslist[1]
         em = discord.Embed(
             title='<a:Bell:866759095767400490> New Map For Sell!',
             color=0xFB005B,
-            description=f'''<a:OK:866760492545343499> To Purchase this map open a <#789777105201397811> or contact <@548461329418289153>\n\n >>> Full Detail of the map [Click here]({post_url})'''
+            description=f'''<a:OK:866760492545343499> To Purchase this map open a <#789777105201397811> or contact <@548461329418289153>\n'''
             )
+        view = FollowView()
+        view.add_item(discord.ui.Button(
+        label='Download', 
+        url=dl_url,
+        emoji=download_emoji
+            )
+        )
         em.set_image(url=image_url)
         em.set_footer(text='Press the "Follow" button if you like to get notified when we upload our exclusive maps!')
-        product = await channel.send(embed=em, view=FollowView(), content=f'||{role_mention.mention}||')
+        product = await channel.send(embed=em, view=view, content=f'||{role_mention.mention}||')
         await ctx.reply(f'> **Product sent.**\nmsg ID: `{product.id}`')
 
 
 #product change status
 @commands.has_permissions(manage_guild=True)
-@client.command()
-async def sold(ctx , id:int = None, img = None):
+@client.command(aliases=["sold"])
+async def _sold(ctx , id:int = None, img = None):
+    '''Change exclusive product to sold: `-sold [Massage ID]`'''
     channel = client.get_channel(866752986083491840)
     msg = await channel.fetch_message(id)
     if id or img != None:
@@ -338,14 +374,16 @@ async def sold(ctx , id:int = None, img = None):
     
     #clear msg
 @commands.has_permissions(manage_guild=True)
-@client.command()
-async def clear(ctx , number:int):
+@client.command(aliases=["clear"])
+async def _clear(ctx , number:int):
+    """Clear messages by value: `-clear [Number]`"""
     await ctx.channel.purge(limit=number+1)
     await ctx.reply(f'`{number}` message deleted!')
 
 @commands.has_permissions(manage_guild=True)
-@client.command()
-async def close(ctx):
+@client.command(aliases=["close"])
+async def _close(ctx):
+    """Close a active ticket `Send in the active channel`"""
     channel = ctx.channel
     if channel.category_id == 789787201981382656:
         embed = discord.Embed(
