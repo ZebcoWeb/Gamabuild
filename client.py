@@ -17,7 +17,7 @@ help_command=None,
 intents=discord.Intents.all()
 )
 client.persistent_views_added = False
-
+# events
 @client.event
 async def on_ready():
     print("Alright we are ready! - Gama Team")
