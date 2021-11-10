@@ -1,5 +1,5 @@
-import asyncio
 import discord
+import asyncio
 import re
 import os
 
