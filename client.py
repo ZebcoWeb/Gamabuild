@@ -9,7 +9,7 @@ from discord.ext import commands
 
 
 TOKEN = os.getenv('BOTTOKEN')
-PREFIX = '-'
+PREFIX = '!'
 
 client = commands.Bot(
 command_prefix=PREFIX,
@@ -318,19 +318,20 @@ By opening a <#789777105201397811> you agree to all of these terms !
 @commands.has_permissions(manage_guild=True)
 @client.command(aliases=["exclusive"])
 async def _exclusive(ctx , *,args=None):
-    """Send exclusive product: `-exclusive [Image Link]^[Download link]`"""
+    """Send exclusive product: `-exclusive [Image Link]^[Download link]^[Description]`"""
     if args == None:
         await ctx.reply(f'> `{PREFIX}exclusive [Image Link]^[Download link]`')
     else:
         channel = client.get_channel(866752986083491840)
         role_mention = ctx.guild.get_role(866976860625043456)
-        argslist = args.split('^')
+        argslist = args.split(' ^ ')
         image_url = argslist[0]
         dl_url = argslist[1]
+        des = argslist[2]
         em = discord.Embed(
-            title='<a:Bell:866759095767400490> New Map For Sell!',
+            title='<a:Bell:866759095767400490> New Map',
             color=0xFB005B,
-            description=f'''<a:OK:866760492545343499> To Purchase this map open a <#789777105201397811> or contact <@548461329418289153>\n'''
+            description='<a:OK:866760492545343499> ' + des
             )
         view = FollowView()
         view.add_item(discord.ui.Button(
