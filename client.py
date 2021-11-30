@@ -9,7 +9,7 @@ from discord.ext import commands
 
 
 TOKEN = os.getenv('BOTTOKEN')
-PREFIX = '!'
+PREFIX = '-'
 
 client = commands.Bot(
 command_prefix=PREFIX,
