@@ -149,11 +149,18 @@ class FollowView(discord.ui.View):
             if role_mention not in member.roles:
                 await member.add_roles(role_mention)
                 em = discord.Embed(description='<:notiff:867001613990363159> Channel notifications are enabled for you.',  color=0x17d34f)
-                await member.send(embed=em)
+                try:
+                    await member.send(embed=em)
+                except:
+                    await interaction.response.send_message(embed=em, ephemeral=True, delete_after=30.0)
             else:
                 em = discord.Embed(description=':exclamation: You have already __Followed__ this channel.',color=0xFF0000)
-                await member.send(embed=em)
-        await interaction.response.defer(ephemeral=True)
+                try:
+                    await member.send(embed=em)
+                except:
+                    await interaction.response.send_message(embed=em, ephemeral=True, delete_after=30.0)
+        if not interaction.response.is_done():
+            await interaction.response.defer(ephemeral=True)
 
     @discord.ui.button(label='Unfollow', custom_id='unfollow_button', style=ButtonStyle.red, emoji=unfollow_emoji)
     async def unfollow(self, button: discord.ui.Button, interaction: discord.Interaction):
@@ -163,11 +170,18 @@ class FollowView(discord.ui.View):
         if role_mention in member.roles:
             await member.remove_roles(role_mention)
             em = discord.Embed(description='<:notiffoff:867082989363658773> Channel notifications are disabled for you.',color=0x17d34f)
-            await member.send(embed=em)
+            try:
+                await member.send(embed=em)
+            except:
+                    await interaction.response.send_message(embed=em, ephemeral=True, delete_after=30.0)
         else:
             em = discord.Embed(description=':exclamation: You have already __Unfollowed__ this channel.',color=0xFF0000)
-            await member.send(embed=em)
-        await interaction.response.defer(ephemeral=True)
+            try:
+                await member.send(embed=em)
+            except:
+                    await interaction.response.send_message(embed=em, ephemeral=True, delete_after=30.0)
+        if not interaction.response.is_done():
+            await interaction.response.defer(ephemeral=True)
 
     # --------------------------------
 
