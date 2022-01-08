@@ -311,6 +311,8 @@ async def _terms(ctx:commands.Context):
 
 <:Rules2:871704398810726432> The funds and chargebacks are decided by us to protect the rights of our team and our dear clients .
 
+<:FF:912767067491557376> The PayPal payments will be done with F&F method **Families & Friends** for smaller projects **under 400$** in 2 or 4 steps of progress with the first part being payed upfront , and for the long term projects contracts will be set and signed to protect the rights of the team and our dear clients .
+
 <:Rules3:871704922465398905> Products you receive from us do not have resell rights in any ways .
 
 <a:MC:866762262227714069> **OUR WAYS**
@@ -318,6 +320,8 @@ async def _terms(ctx:commands.Context):
 <:Rules4:871705388918128640> We are flexible with our work and respect our clients opinion so...edits and small changes are always available .
 
 <:Rules5:871710416110248006> Making new and impossible styles is a pleasant practice for us so...don't be afraid to bring your own ideas to us !
+
+<:Media:912767137322504243> We will have the accessibility of making media content from the ordered projects .
 
 By opening a <#789777105201397811> you agree to all of these terms !
 ''',
