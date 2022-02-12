@@ -400,17 +400,26 @@ async def _clear(ctx , number:int):
     await ctx.channel.purge(limit=number+1)
     await ctx.reply(f'`{number}` message deleted!')
 
+
+ONE_DAY = 86400 # to seconds
+
 @commands.has_permissions(manage_guild=True)
 @client.command(aliases=["close"])
-async def _close(ctx):
+async def _close(ctx, mode: str = None):
     """Close a active ticket `Send in the active channel`"""
     channel = ctx.channel
     if channel.category_id == 789787201981382656:
         embed = discord.Embed(
             title="Thanks for giving your time!",
-            description="We are closing this ticket automatically in 10 seconds...",
             color=0xFB005B
         )
+        if mode == 'fast':
+            embed.description = "We are closing this ticket automatically in 10 seconds..."
+            CLOSE_DELAY = 10
+        elif not mode:
+            embed.description = "We are closing this ticket automatically in 24 hours..."
+            CLOSE_DELAY = ONE_DAY
+
         embed.set_footer(text="GamaBuild Team" , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
         msg = await ctx.send(embed=embed)
         await msg.add_reaction("\U0001f1f9")
@@ -418,7 +427,7 @@ async def _close(ctx):
         await msg.add_reaction("\U0001f1ed")
         await asyncio.sleep(1)
         await msg.add_reaction("\U0001f1fd")
-        await asyncio.sleep(10)
+        await asyncio.sleep(CLOSE_DELAY)
         await channel.delete()
 
 
