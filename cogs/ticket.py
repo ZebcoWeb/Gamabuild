@@ -69,8 +69,8 @@ class Ticket(commands.Cog):
         self.client.add_view(TicketView())
     
     @commands.has_permissions(manage_guild=True)
-    @commands.command()
-    async def ticket(self, ctx):
+    @commands.command(aliases=["ticket"])
+    async def _ticket(self, ctx):
         """Create new `Create ticket` message"""
 
         channel = await self.client.fetch_channel(Channel.TICKET)
@@ -87,7 +87,7 @@ class Ticket(commands.Cog):
         )
         embed.set_image(url='https://cdn.discordapp.com/attachments/980177765452099654/994311395787161620/Ticket.png')
         embed.set_footer(text= 'GamaBuild' , icon_url='https://media.discordapp.net/attachments/980177765452099654/994267291820769373/Logo.png')
-        await channel.send(embed=embed, view=TicketView(self.client))
+        await channel.send(embed=embed, view=TicketView())
         await ctx.reply('> **Ticket has been made!**')
     
     @commands.has_permissions(manage_guild=True)

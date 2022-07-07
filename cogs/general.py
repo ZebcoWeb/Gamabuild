@@ -102,8 +102,8 @@ class General(commands.Cog):
 
 
     @commands.has_permissions(manage_guild=True)
-    @commands.command()
-    async def new (self, ctx , *, args=None):
+    @commands.command(aliases=["new"])
+    async def _new(self, ctx , *, args=None):
         """send embed news: `-new [Tilte]^[Description]^[Image = Optional]`"""
 
         if args == None:
