@@ -75,8 +75,8 @@ class Member(commands.Cog):
 <:Entertainment:994294738566008872> ● Other entertaining features such as memes, self promo, music and custom private voice channels !''',
             color=0xFB005B
         )
-        embed.set_footer(text= 'GamaBuild' , icon_url='https://cdn.discordapp.com/attachments/980177765452099654/994267291820769373/Logo.png')
-        embed.set_image(url='https://cdn.discordapp.com/attachments/980177765452099654/994284759037513858/VerifyDiscord.png')
+        embed.set_footer(text= 'By Clicking The Verify Button You Can Start Your Journey In This Server' , icon_url='https://cdn.discordapp.com/attachments/980177765452099654/994505425397485598/6979530.png')
+        embed.set_image(url='https://cdn.discordapp.com/attachments/980177765452099654/994505425397485598/6979530.png')
         await channel.send(embed=embed, view=VerifyView())
         await ctx.reply('> **Verify has been made!**')
 

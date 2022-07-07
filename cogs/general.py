@@ -34,7 +34,7 @@ class General(commands.Cog):
 
     <:Rules3:871704922465398905> Making new and impossible styles is a pleasant practice for us so...don't be afraid to bring your own ideas to us!
 
-    By opening a <#{Channel.TERM}> you agree to all of these terms !
+    By opening a <#{Channel.TICKET}> you agree to all of these terms !
     ''',
             color=0xFB005B
         )
