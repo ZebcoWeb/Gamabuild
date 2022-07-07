@@ -52,7 +52,7 @@ class TicketMenu(discord.ui.Select):
             embed.set_thumbnail(url=member.avatar.url)
             embed.set_footer(text="GamaBuild" , icon_url='https://media.discordapp.net/attachments/980177765452099654/994267291820769373/Logo.png')
             await ticket_channel.send(embed=embed, content=member.mention)
-            await interaction.response.edit_message(view=TicketView(interaction.client))
+            await interaction.response.edit_message(view=TicketView())
         else:
             await interaction.response.defer()
 
