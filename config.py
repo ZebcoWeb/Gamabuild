@@ -106,5 +106,5 @@ class Emoji:
 class DB:
     HOST = 'localhost'
     USERNAME = 'gamauser'
-    PASSWORD = 'L?X<GYG$&3Fxb.N[FB)w'
+    PASSWORD = 'oloiloil43t843ef09sachkjcsac'
     DATABASE = 'gamabuild'
