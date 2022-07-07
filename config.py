@@ -3,7 +3,7 @@ import os
 
 class Config:
     SERVER_ID = 769855661223313413
-    TOKEN = 'ODQwNjQ0Njc5MzU4ODczNjQy.G8lWG0.QONpNpbApxHFFhk-sddJ0FNKh7332eF1-emC-g'
+    TOKEN = os.getenv('TOKEN')
     PREFIX = '-'
 
     IGNORE_EXTENTIONS = []
