@@ -57,11 +57,11 @@ class Member(commands.Cog):
 
     # Commands
     @commands.has_permissions(manage_guild=True)
-    @commands.command()
-    async def verify(self, ctx):
+    @commands.command(aliases=["verify"])
+    async def _verify(self, ctx:commands.Context):
         """Create new `Verify` message"""
 
-        channel = await self.client.fetch_channel(Channel.PREMADE_MAPS)
+        channel = await self.client.fetch_channel(Channel.VERIFY)
         async for message in channel.history(limit=None):
             await message.delete()
         embed = discord.Embed(
@@ -77,7 +77,7 @@ class Member(commands.Cog):
         )
         embed.set_footer(text= 'GamaBuild' , icon_url='https://cdn.discordapp.com/attachments/980177765452099654/994267291820769373/Logo.png')
         embed.set_image(url='https://cdn.discordapp.com/attachments/980177765452099654/994284759037513858/VerifyDiscord.png')
-        await channel.send(embed=embed, view=VerifyView(self.client))
+        await channel.send(embed=embed, view=VerifyView())
         await ctx.reply('> **Verify has been made!**')
 
 
