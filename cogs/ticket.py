@@ -18,7 +18,7 @@ class TicketMenu(discord.ui.Select):
         options = []
         for section, emoji in Config.TICKET_SECTIONS:
             options.append(discord.SelectOption(
-                    label=section, 
+                    label=section,
                     value=emoji + ' ' + section,
                     emoji=emoji
                 )
@@ -38,7 +38,11 @@ class TicketMenu(discord.ui.Select):
                 member: discord.PermissionOverwrite(read_messages=True)
             }
             title = '╠ '+ member.name
-            ticket_channel = await category.create_text_channel(title, overwrites=overwrites)
+            ticket_channel = await category.create_text_channel(
+                title, 
+                overwrites=overwrites,
+                #! fix position
+                )
 
             embed = discord.Embed(
                 title="Please be patient while team members handle this ticket.",
@@ -73,17 +77,19 @@ class Ticket(commands.Cog):
         """Create new `Create ticket` message"""
 
         channel = await self.client.fetch_channel(Channel.TICKET)
+        term = await self.client.fetch_channel(Channel.TERM)
 
         async for message in channel.history(limit=None):
             await message.delete()
 
         embed = discord.Embed(
-            title="title",
-            description='''Ticket description context''',
+            title="Tickets",
+            description=f'''<:Services:994294419115233322> ● Use the menu down below to place a commission or contact us in regards of a sponsorship deals.
+<:Terms:994313748556808253> ● Make sure to read the {term.mention} of service before opening a ticket!''',
             color=0xFB005B
         )
-        embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/841291473332207662/841744350962909184/Ticket.png')
-        embed.set_footer(text= 'GamaBuild Team' , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
+        embed.set_image(url='https://cdn.discordapp.com/attachments/980177765452099654/994311395787161620/Ticket.png')
+        embed.set_footer(text= 'GamaBuild' , icon_url='https://media.discordapp.net/attachments/980177765452099654/994267291820769373/Logo.png')
         await channel.send(embed=embed, view=TicketView(self.client))
         await ctx.reply('> **Ticket has been made!**')
     

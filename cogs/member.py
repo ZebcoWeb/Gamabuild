@@ -47,7 +47,7 @@ class Member(commands.Cog):
 
         members_number = 0
         async for member in guild.fetch_members(limit=None):
-            if member.id not in registered_members:
+            if member.id not in registered_members and member.bot == False:
                 check_role = member.get_role(Roles.TRAVELER)
                 if check_role:
                     await MemberModel.join_member(member, verified=True)
@@ -63,27 +63,22 @@ class Member(commands.Cog):
     async def verify(self, ctx):
         """Create new `Verify` message"""
 
-
         channel = await self.client.fetch_channel(Channel.PREMADE_MAPS)
         async for message in channel.history(limit=None):
             await message.delete()
         embed = discord.Embed(
-            title='Hey There Traveler !',
-            description='''**:ringed_planet: You are very welcomed in our planet (Gama)**
-
-    Make yourself home , there are many places you can check here and explore such as :
-    :bell: - Announcements : you can read the overall things that happen in this planet or get Friends with Ruler and place your add here !
-    :page_facing_up: -Rules : The Rules you have to follow when wondering around here !
-    :tv: -instagram : check our posts on instagram too , you might like what you see there !
-    :camera: -Previous projects : The Recent Wonders We Created on this amazing planet !
-    :interrobang: -FAQ : If you're still confused by the glory of this planet feel free to read this section 
-
-    Now , there are many robots among the travelers and they are not accepted in this community ! you're not a robot are you traveler ?
-    click on <:verifyy:867000676452925450> and verify yourself !''',
+            title='Welcome Traveler!',
+            description='''**We're delighted to have you checking** 
+<:Share:994295237205827636> ● GamaBuild's most recent social media posts and activities.
+<:LevelUP:994295516206735440> ● Our fun Leveling system in which you can gain experience by chatting , inviting your friends, boosting the server and...
+<:Games:994293396128673852> ● The fun minigames you can play and earn Gama Coin by doing so.
+<:Market:994293107120160788> ● You can **download free Minecraft builds** in the marketplace !
+<:Services:994294419115233322> ● The services section ! to strike a sponsor deal, place a commission or to simply get in contact with us.
+<:Entertainment:994294738566008872> ● Other entertaining features such as memes, self promo, music and custom private voice channels !''',
             color=0xFB005B
         )
-        embed.set_footer(text= 'GamaBuild Team' , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
-        embed.set_thumbnail(url='https://media.discordapp.net/attachments/779789524431536129/907567032453718026/Welcome.png')
+        embed.set_footer(text= 'GamaBuild' , icon_url='https://cdn.discordapp.com/attachments/980177765452099654/994267291820769373/Logo.png')
+        embed.set_image(url='https://cdn.discordapp.com/attachments/980177765452099654/994284759037513858/VerifyDiscord.png')
         await channel.send(embed=embed, view=VerifyView(self.client))
         await ctx.reply('> **Verify has been made!**')
 
@@ -109,7 +104,7 @@ class Member(commands.Cog):
         description = f'ID: ``{member.id}``' ,
         color=0xFB005B
         )
-        em.set_thumbnail(url= member.avatar.url)
+        em.set_thumbnail(url=member.avatar.url)
         await channel.send(embed=em)
 
         await self.client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f'{self.client.guild.member_count} Members'))
@@ -125,7 +120,7 @@ class Member(commands.Cog):
         description = f'ID: ``{member.id}``' ,
         color=0xFB005B
         )
-        em.set_thumbnail(url= member.avatar.url)
+        # em.set_thumbnail(url= member.avatar.url)
         await channel.send(embed=em)
         
         await self.client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f'{self.client.guild.member_count} Members'))

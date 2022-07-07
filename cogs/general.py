@@ -4,6 +4,7 @@ import re
 from discord.ext import commands
 
 from config import Channel, Config
+from models import MemberModel
 
 class General(commands.Cog):
     def __init__(self, client: commands.Bot):
@@ -124,7 +125,7 @@ class General(commands.Cog):
             finally:
                 await channel.send(embed=embed,content='@everyone')
                 await ctx.reply(f'> **Message sent.**')
-    
+
 
     # Events 
     
@@ -143,9 +144,14 @@ class General(commands.Cog):
         if message.channel.id == Channel.MEME and message.author.bot == False:
             if message.content or message.attachments != []:
                 if self.check_media(message):
+                    await MemberModel.find_one(MemberModel.member_id == message.author.id).inc({MemberModel.xp: Config.INC_XP_MEME})
                     await message.create_thread(name='💭 Comments', auto_archive_duration=10080)
                 else:
                     await message.delete()
+
+        if message.channel.type == discord.ChannelType.public_thread:
+            if not message.author.bot:
+                await message.channel.remove_user(message.author)
 
 async def setup(client: commands.Bot):
     await client.add_cog(General(client))

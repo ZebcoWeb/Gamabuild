@@ -1,10 +1,11 @@
+from operator import index
 import discord
 
-from discord.ext import commands, tasks
-from datetime import datetime
+from discord.ext import commands
+from discord import app_commands
 
-from config import Channel
-
+from config import Channel, Config
+from utils import error_embed, success_embed
 
 
 class VoiceGenerator(commands.Cog):
@@ -12,20 +13,18 @@ class VoiceGenerator(commands.Cog):
         self.client: commands.Bot = client
         self.inactive_session = []
 
-        self.delete_inactive_voices.start()
-
+        
     @commands.Cog.listener('on_voice_state_update')
     async def member_join_handler(self, member, before, after):
         if after.channel:
             if after.channel.id == Channel.NEW_VC_SESSION and member.bot == False:
                 voice_category = await self.client.fetch_channel(Channel.VOICE_CATEGORY)
-                voices_number = len(voice_category.voice_channels) - 1
-
                 overwrites = {
+                    voice_category.guild.default_role: discord.PermissionOverwrite(view_channel=False),
                     member: discord.PermissionOverwrite(mute_members=True, moderate_members=True, deafen_members=True, move_members=True, use_voice_activation=True),
                 }
                 general_vc = await voice_category.create_voice_channel(
-                    name=f'General # {voices_number}',
+                    name=f'{member.name}',
                     overwrites=overwrites,
                     position=10,
                     bitrate=64000,
@@ -36,37 +35,27 @@ class VoiceGenerator(commands.Cog):
     
     @commands.Cog.listener('on_voice_state_update')
     async def filter_inactive_voices(self, member, before, after):
-        if member.bot == False:
-            if before.channel:
-                channel = before.channel
-                vc_type = 'before'
-            if after.channel:
-                channel = after.channel
-                vc_type = 'after'
+        if before.channel:
+            if before.channel.id != Channel.NEW_VC_SESSION and before.channel.category_id == Channel.VOICE_CATEGORY:
+                if len(before.channel.members) == 0:
+                    await before.channel.delete()
 
-            if channel.id != Channel.NEW_VC_SESSION and channel.category_id == Channel.VOICE_CATEGORY:
-                if vc_type == 'before' and len(channel.members) == 0:
-                    self.inactive_session.append(
-                        (channel, datetime.now())
-                    )
-                    print(self.inactive_session)
-                elif vc_type == 'after' and len(channel.members) > 0:
-                    for channel_inactive, datetime_inactive in self.inactive_session:
-                        if channel == channel_inactive:
-                            del self.inactive_session[self.inactive_session.index((channel_inactive, datetime_inactive))]
-                    
-                    print(self.inactive_session)
 
-    @tasks.loop(seconds=15)
-    async def delete_inactive_voices(self):
-        index = 0
-        for channel, create_time in self.inactive_session:
-            if (datetime.now() - create_time).seconds >= 1800: # 30 minutes
-                await channel.delete()
-                del self.inactive_session[index]
-                index = 0
+    @app_commands.command(name='add', description='➕ Invite a user to a voice channel')
+    @app_commands.guilds(Config.SERVER_ID)
+    @app_commands.describe(user='The user to invite')
+    async def add_user(self, interaction: discord.Interaction, user: discord.Member):
+        if not interaction.user.voice:
+            vc_channels = [vc for vc in interaction.guild.voice_channels if vc.id != Channel.NEW_VC_SESSION and vc.category_id == Channel.VOICE_CATEGORY]
+            if interaction.user.voice.channel in vc_channels:
+                await vc_channels[0].set_permissions(user, view_channel=True, connect=True)
+                await interaction.response.send_message(embed=success_embed(f'{user.mention} now can see your voice channel'), ephemeral=True)
             else:
-                index += 1
+                await interaction.response.send_message(embed=error_embed('You are not in a private voice channel'), ephemeral=True)
+        else:
+            await interaction.response.send_message(embed=error_embed('You are not in a voice channel'), ephemeral=True)
+
+
 
 async def setup(client: commands.Bot):
     await client.add_cog(VoiceGenerator(client))

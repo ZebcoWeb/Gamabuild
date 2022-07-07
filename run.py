@@ -1,20 +1,33 @@
 import discord
 import os
 
-from discord import Intents, __version__
+from discord import Intents, __version__, app_commands
 from discord.ext import commands
 
 from config import Config
-from utils import init_database
+from cogs.bet_system import CasinoMenuView
+from utils import init_database, error_embed
 
+
+class CommandTree(app_commands.CommandTree):
+    def __init__(self, client, *args, **kwargs):
+        super().__init__(client, *args, **kwargs)
+
+    async def on_error(self, interaction: discord.Interaction, error: app_commands.AppCommandError):
+        if isinstance(error, (app_commands.MissingPermissions)):
+            await interaction.response.send_message(embed=error_embed(f'You don\'t have permission to use this command'), ephemeral=True)
+        elif isinstance(error, app_commands.MissingRole):
+            await interaction.response.send_message(embed=error_embed(f'You don\'t have the required role to use this command'), ephemeral=True)
+        elif isinstance(error, app_commands.CommandOnCooldown):
+            await interaction.response.send_message(embed=error_embed(f'You are on cooldown for `{round(error.retry_after, 2)}` seconds'), ephemeral=True)
 
 class BotClient(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            
             help_command = None,
             command_prefix = commands.when_mentioned_or(Config.PREFIX),
-            intents=Intents.all()
+            intents=Intents.all(),
+            tree_cls=CommandTree,
         )
         self.persistent_views_added = False
     
@@ -50,8 +63,8 @@ Alright we are ready! - Gama Team
 """)
         print('> Loaded extensions --> ' + ', '.join(self.extensions.keys()))
 
-        if not self.persistent_views_added:
-                self.persistent_views_added = True
+        self.add_view(CasinoMenuView(cog=self.get_cog('BetSystem')))
+        self.persistent_views_added = True
 
         members_number = 0
         async for member in self.guild.fetch_members(limit=None):

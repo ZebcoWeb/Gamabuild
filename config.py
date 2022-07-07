@@ -17,6 +17,41 @@ class Config:
 
     DISCORD_COLOR = 0x2F3136
 
+    INC_XP_CHITCHAT = 5
+    INC_XP_MEME = 20
+    INC_XP_BOOST = 3000
+
+    MIN_XP_DAILY = 10
+    MAX_XP_DAILY = 50
+
+    MIN_XP_WEEKLY = 100
+    MAX_XP_WEEKLY = 200
+
+    GTN_BETS = {
+        # bet - guess
+        5: {'guess': 3, 'max_number': 25},
+        10: {'guess': 6, 'max_number': 50},
+        15: {'guess': 9, 'max_number': 50},
+        20: {'guess': 12, 'max_number': 50},
+        25: {'guess': 13, 'max_number': 100},
+        30: {'guess': 14, 'max_number': 100},
+        35: {'guess': 15, 'max_number': 150},
+        40: {'guess': 16, 'max_number': 150},
+        45: {'guess': 17, 'max_number': 200},
+        50: {'guess': 18, 'max_number': 200}
+    }
+
+    WHEEL_BETS = (
+        # coefficient - weight
+        (5, 0.1),
+        (3, 2.9),
+        (2, 10),
+        (1.5, 18),
+        (1, 20),
+        (0.5, 30),
+        (0, 20),
+    )
+
 
 class Roles:
     NEW = 842843180608127038
@@ -47,18 +82,22 @@ class Channel:
     VERIFY = 842431646648369224
     VOICE_CATEGORY = 980851333106122852
     TICKET_CATEGORY = 789787201981382656
-    NEW_VC_SESSION = 980870406347030528
+    NEW_VC_SESSION = 993999406309331044
     TERM = 769856028425977876
     PREMADE_MAPS = 842431646648369224
     INSTA = 841982534502187008
     MEME = 980880694354014319
     SELFPROMO = 981906662791184434
+    MARKETPLACE = 992738361410326538
+    ACTIVITIES = 993969929927798836
+    CASINO = 993988870888755220
 
 class Emoji:
     VERIFY = '<:verifyy:867000676452925450>'
     FOLLOW = '<:notiff:867001613990363159>'
     UNFOLLOW = '<:notiffoff:867082989363658773>'
     DOWNLOAD = '<:download:908033302345179136>'
+    PURCHASE = '<:purchase:992740103992660038>'
 
 
 class DB:
