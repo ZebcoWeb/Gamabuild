@@ -76,7 +76,7 @@ class Member(commands.Cog):
             color=0xFB005B
         )
         embed.set_footer(text= 'By Clicking The Verify Button You Can Start Your Journey In This Server' , icon_url='https://cdn.discordapp.com/attachments/980177765452099654/994505425397485598/6979530.png')
-        embed.set_image(url='https://cdn.discordapp.com/attachments/980177765452099654/994505425397485598/6979530.png')
+        embed.set_image(url='https://cdn.discordapp.com/attachments/980177765452099654/994284759037513858/VerifyDiscord.png')
         await channel.send(embed=embed, view=VerifyView())
         await ctx.reply('> **Verify has been made!**')
 
