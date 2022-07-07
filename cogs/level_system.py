@@ -39,19 +39,19 @@ class LevelSystem(commands.Cog):
             random_xp = random.randint(25, Config.MAX_XP_DAILY) # Having more chances for the first time
             member.xp += random_xp
             await member.save()
-            await interaction.response.send_message(f'🎁 You got **{random_xp}** xp for daily!', ephemeral=True)
-            await log_channel.send(f'🎁 {interaction.user.mention} got **{random_xp}** xp for daily!')
+            await interaction.response.send_message(f'🎁 You got **{random_xp}**xp for daily!', ephemeral=True)
+            await log_channel.send(f'🎁 ● {interaction.user.mention} got {random_xp}xp <:stats:994300647082041534> for daily!')
         else:
             if (datetime.now() - member.last_do_daily).days >= 1:
                 member.last_do_daily = datetime.now()
                 random_xp = random.randint(Config.MIN_XP_DAILY, Config.MAX_XP_DAILY)
                 member.xp += random_xp
                 await member.save()
-                await interaction.response.send_message(f'🎁 You got **{random_xp}** xp for daily!', ephemeral=True)
-                await log_channel.send(f'🎁 {interaction.user.mention} got **{random_xp}** xp for daily!')
+                await interaction.response.send_message(f'🎁 You got **{random_xp}**xp for daily!', ephemeral=True)
+                await log_channel.send(f'🎁 ● {interaction.user.mention} got {random_xp}xp <:stats:994300647082041534> for daily!')
             else:
                 remaining_time = (member.last_do_daily + timedelta(days=1) - datetime.now())
-                await interaction.response.send_message(f'❗You already did `daily` today!\n\n➔ Try again in `{remaining_time.seconds // 3600}` hours, `{remaining_time.seconds // 60 % 60}` minutes and `{remaining_time.seconds % 60}` seconds.')
+                await interaction.response.send_message(f'❗You already did `daily` today!\n\n➔ Try again in `{remaining_time.seconds // 3600}` hours, `{remaining_time.seconds // 60 % 60}` minutes and `{remaining_time.seconds % 60}` seconds.', ephemeral=True)
 
 
     @app_commands.command(name='weekly', description='🚀 Get weekly xp reward')
@@ -65,19 +65,19 @@ class LevelSystem(commands.Cog):
             random_xp = random.randint(140, Config.MAX_XP_WEEKLY) # Having more chances for the first time
             member.xp += random_xp
             await member.save()
-            await interaction.response.send_message(f'🚀 You got **{random_xp}** xp for weekly!', ephemeral=True)
-            await log_channel.send(f'🚀 {interaction.user.mention} got **{random_xp}** xp for weekly!')
+            await interaction.response.send_message(f'🚀 You got **{random_xp}**xp for weekly!', ephemeral=True)
+            await log_channel.send(f'🚀 ● {interaction.user.mention} got {random_xp}xp <:stats:994300647082041534> for weekly!')
         else:
             if (datetime.now() - member.last_do_weekly).days >= 7:
                 member.last_do_weekly = datetime.now()
                 random_xp = random.randint(Config.MIN_XP_WEEKLY, Config.MAX_XP_WEEKLY)
                 member.xp += random_xp
                 await member.save()
-                await interaction.response.send_message(f'🚀 You got **{random_xp}** xp for weekly!', ephemeral=True)
-                await log_channel.send(f'🚀 {interaction.user.mention} got **{random_xp}** xp for weekly!')
+                await interaction.response.send_message(f'🚀 You got **{random_xp}**xp for weekly!', ephemeral=True)
+                await log_channel.send(f'🚀 ● {interaction.user.mention} got {random_xp}xp <:stats:994300647082041534> for weekly!')
             else:
                 remaining_time = (member.last_do_weekly + timedelta(weeks=1) - datetime.now())
-                await interaction.response.send_message(f'❗You already did `weekly` this week!\n\n➔ Try again in `{remaining_time.days}` days, `{remaining_time.seconds // 3600}` hours, `{remaining_time.seconds // 60 % 60}` minutes and `{remaining_time.seconds % 60}` seconds.')
+                await interaction.response.send_message(f'❗You already did `weekly` this week!\n\n➔ Try again in `{remaining_time.days}` days, `{remaining_time.seconds // 3600}` hours, `{remaining_time.seconds // 60 % 60}` minutes and `{remaining_time.seconds % 60}` seconds.', ephemeral=True)
 
 
 async def setup(client: commands.Bot):

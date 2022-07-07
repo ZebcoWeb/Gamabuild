@@ -19,7 +19,8 @@ class CommandTree(app_commands.CommandTree):
         elif isinstance(error, app_commands.MissingRole):
             await interaction.response.send_message(embed=error_embed(f'You don\'t have the required role to use this command'), ephemeral=True)
         elif isinstance(error, app_commands.CommandOnCooldown):
-            await interaction.response.send_message(embed=error_embed(f'You are on cooldown for `{round(error.retry_after, 2)}` seconds'), ephemeral=True)
+            secends = round(error.retry_after, 2)
+            await interaction.response.send_message(embed=error_embed(f'You are on cooldown for `{secends // 3600}` hours, `{secends // 60 % 60}` minutes and `{secends % 60}` seconds.'), ephemeral=True)
 
 class BotClient(commands.Bot):
     def __init__(self, *args, **kwargs):

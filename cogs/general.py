@@ -19,29 +19,27 @@ class General(commands.Cog):
         term_channel = await self.client.fetch_channel(Channel.TERM)
         embed=discord.Embed(
             title="<a:OK:866760492545343499> **TERMS OF SERVICE**",
-            description='''
-    <:Rules1:871703799918657558> Our work comes with quality , detail and attention to your personal liking and for that reason we do not accept any negotiation for the price !
+            description=f'''
+    <:Rules1:871703799918657558> The commissions will be set with contracts signed from the both parties.
 
-    <:Rules2:871704398810726432> The funds and chargebacks are decided by us to protect the rights of our team and our dear clients .
+    <:Rules2:871704398810726432> Funds and charge backs are decided within the boundaries of the contract.
 
-    <:FF:912767067491557376> The PayPal payments will be done with F&F method **Families & Friends** for smaller projects **under 4JUdGzvrMFDWrUUwY3toJATSeNwjn54LkCnKBPRzDuhzi5vSepHfUckJNxRL2gjkNrSqtCoRUrEDAgRwsQvVCjZbRyFTLRNyDmT1a1boZVcontracts will be set and signed to protect the rights of the team and our dear clients .
+    <:FF:912767067491557376> Our current payment methods are : PayPal & Crypto
 
-    <:Rules3:871704922465398905> Products you receive from us do not have resell rights in any ways .
+    <:Media:912767137322504243> GamaBuild will have the advantage of making media content from all the commissions under any circumstances and conditions. 
 
     <a:MC:866762262227714069> **OUR WAYS**
 
-    <:Rules4:871705388918128640> We are flexible with our work and respect our clients opinion so...edits and small changes are always available .
+    <:Rules5:871710416110248006> We are flexible with our work and respect our clients opinion so...edits and small changes are always available.
 
-    <:Rules5:871710416110248006> Making new and impossible styles is a pleasant practice for us so...don't be afraid to bring your own ideas to us !
+    <:Rules3:871704922465398905> Making new and impossible styles is a pleasant practice for us so...don't be afraid to bring your own ideas to us!
 
-    <:Media:912767137322504243> We will have the accessibility of making media content from the ordered projects .
-
-    By opening a <#789777105201397811> you agree to all of these terms !
+    By opening a <#{Channel.TERM}> you agree to all of these terms !
     ''',
             color=0xFB005B
         )
-        embed.set_thumbnail(url='https://media.discordapp.net/attachments/779789524431536129/871700348534947900/Rules.png')
-        embed.set_footer(text= 'GamaBuild Team' , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
+        embed.set_image(url='https://cdn.discordapp.com/attachments/980177765452099654/994493788191985705/Terms.png')
+        embed.set_footer(text= 'GamaBuild' , icon_url='https://media.discordapp.net/attachments/980177765452099654/994267291820769373/Logo.png')
         await term_channel.send(embed=embed)
         await ctx.reply('> **Terms has been made!**')
     
@@ -74,7 +72,7 @@ class General(commands.Cog):
             description = help_des,
             color = 0xFB005B
         )
-        embed.set_footer(text= 'GamaBuild Team' , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
+        embed.set_footer(text= 'GamaBuild' , icon_url='https://media.discordapp.net/attachments/980177765452099654/994267291820769373/Logo.png')
         
         await ctx.send(embed=embed)
 
@@ -92,7 +90,7 @@ class General(commands.Cog):
             title = argslist[0]
             description = argslist[1]
             embed = discord.Embed(title = f'{title}' , description= f'''{description}''' , color=0xFB005B)
-            embed.set_footer(text= 'GamaBuild Team' , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
+            embed.set_footer(text= 'GamaBuild' , icon_url='https://media.discordapp.net/attachments/980177765452099654/994267291820769373/Logo.png')
             try:
                 image = argslist[2]
                 embed.set_image(url=f'{image}')
@@ -116,7 +114,7 @@ class General(commands.Cog):
             title = argslist[0]
             description = argslist[1]
             embed = discord.Embed(title = f'{title}' , description= f'''{description}''' , color=0xFB005B)
-            embed.set_footer(text= 'GamaBuild Team' , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
+            embed.set_footer(text= 'GamaBuild' , icon_url='https://media.discordapp.net/attachments/980177765452099654/994267291820769373/Logo.png')
             try:
                 image = argslist[2]
                 embed.set_image(url=f'{image}')

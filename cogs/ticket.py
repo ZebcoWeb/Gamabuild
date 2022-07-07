@@ -1,3 +1,4 @@
+from turtle import position
 import discord
 import asyncio
 
@@ -37,12 +38,13 @@ class TicketMenu(discord.ui.Select):
                 guild.me: discord.PermissionOverwrite(read_messages=True),
                 member: discord.PermissionOverwrite(read_messages=True)
             }
-            title = '╠ '+ member.name
+            title = '╠ '+ f'{section_value[0]} ' + member.name
+            previous_channel = await self.client.fetch_channel(Channel.PREVIOUS_PROJECTS)
             ticket_channel = await category.create_text_channel(
                 title, 
                 overwrites=overwrites,
-                #! fix position
-                )
+                position=previous_channel.position - 1,
+            )
 
             embed = discord.Embed(
                 title="Please be patient while team members handle this ticket.",
@@ -50,7 +52,7 @@ class TicketMenu(discord.ui.Select):
                 color=0xFB005B
             )
             embed.set_thumbnail(url=member.avatar.url)
-            embed.set_footer(text="GamaBuild Team" , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
+            embed.set_footer(text="GamaBuild" , icon_url='https://media.discordapp.net/attachments/980177765452099654/994267291820769373/Logo.png')
             await ticket_channel.send(embed=embed, content=member.mention)
             await interaction.response.edit_message(view=TicketView(self.client))
         else:

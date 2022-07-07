@@ -12,4 +12,4 @@ COPY . .
 RUN python -m pip install --upgrade pip && \
     pip install -r req.txt
 
-CMD ["python", "client.py"]
+CMD ["python", "run.py"]
