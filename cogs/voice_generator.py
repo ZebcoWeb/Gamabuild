@@ -1,4 +1,3 @@
-from operator import index
 import discord
 
 from discord.ext import commands

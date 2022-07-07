@@ -4,12 +4,13 @@ from beanie import init_beanie, Document
 
 from config import Config, DB
 
+
+
 def success_embed(msg: str, color = None):
     return discord.Embed(
         description = ':white_check_mark: ' + msg,
         color = color if color else Config.DISCORD_COLOR
     )
-
 
 def error_embed(msg: str, color = None):
     return discord.Embed(
@@ -68,7 +69,6 @@ async def init_database(loop: asyncio.AbstractEventLoop = None):
             sys.exit(1)
 
     except Exception as e:
-        raise e
         print('> Could not connect to database!')
         print('> Exiting...')
         sys.exit(1)

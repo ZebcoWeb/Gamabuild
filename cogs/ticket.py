@@ -1,4 +1,3 @@
-from turtle import position
 import discord
 import asyncio
 
@@ -7,13 +6,12 @@ from discord.ext import commands
 from config import Channel, Config
 
 class TicketMenu(discord.ui.Select):
-    def __init__(self, client):
+    def __init__(self):
         super().__init__(
             custom_id='ticket_menu',
             placeholder='Select one of the sections...', 
             options=self.ticket_options(),
         )
-        self.client = client
 
     def ticket_options(self):
         options = []
@@ -30,7 +28,7 @@ class TicketMenu(discord.ui.Select):
         if len(self.values) > 0:
             member = interaction.user
             guild = interaction.guild
-            category = await self.client.fetch_channel(Channel.TICKET_CATEGORY)
+            category = await interaction.client.fetch_channel(Channel.TICKET_CATEGORY)
             section_value = self.values[0]
 
             overwrites = {
@@ -39,7 +37,7 @@ class TicketMenu(discord.ui.Select):
                 member: discord.PermissionOverwrite(read_messages=True)
             }
             title = '╠ '+ f'{section_value[0]} ' + member.name
-            previous_channel = await self.client.fetch_channel(Channel.PREVIOUS_PROJECTS)
+            previous_channel = await interaction.client.fetch_channel(Channel.PREVIOUS_PROJECTS)
             ticket_channel = await category.create_text_channel(
                 title, 
                 overwrites=overwrites,
@@ -54,24 +52,21 @@ class TicketMenu(discord.ui.Select):
             embed.set_thumbnail(url=member.avatar.url)
             embed.set_footer(text="GamaBuild" , icon_url='https://media.discordapp.net/attachments/980177765452099654/994267291820769373/Logo.png')
             await ticket_channel.send(embed=embed, content=member.mention)
-            await interaction.response.edit_message(view=TicketView(self.client))
+            await interaction.response.edit_message(view=TicketView(interaction.client))
         else:
             await interaction.response.defer()
-    
-
 
 class TicketView(discord.ui.View):
-    def __init__(self, client):
+    def __init__(self):
         super().__init__(timeout=None)
-        self.client = client
-        self.add_item(TicketMenu(self.client))
+        self.add_item(TicketMenu())
 
 
 class Ticket(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
 
-        self.client.add_view(TicketView(self.client))
+        self.client.add_view(TicketView())
     
     @commands.has_permissions(manage_guild=True)
     @commands.command()

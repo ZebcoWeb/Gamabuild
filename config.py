@@ -1,9 +1,9 @@
-
+import os
 
 
 class Config:
     SERVER_ID = 769855661223313413
-    TOKEN = 'OTgwODQxODUwNzUzNjQ2Njcz.G28pSm.w-_OCPLP0NfT7Y30XTokzDglegaqNy_rKSea68'
+    TOKEN = os.getenv('TOKEN')
     PREFIX = '-'
 
     IGNORE_EXTENTIONS = []
@@ -106,5 +106,5 @@ class Emoji:
 class DB:
     HOST = 'localhost'
     USERNAME = 'gamauser'
-    PASSWORD = 'oloiloil43t843ef09sachkjcsac'
+    PASSWORD = '8rf98hre8439d20dwkffewf'
     DATABASE = 'gamabuild'

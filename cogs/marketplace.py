@@ -19,7 +19,8 @@ class PurchaseButtom(discord.ui.Button):
         super().__init__(
             label='Purchase',
             style=discord.ButtonStyle.green,
-            emoji=discord.PartialEmoji.from_str(Emoji.PURCHASE)
+            emoji=discord.PartialEmoji.from_str(Emoji.PURCHASE),
+            custom_id='purchase_button'
         )
     
     async def callback(self, interaction: discord.Interaction):
@@ -108,6 +109,8 @@ class AddProductForm(discord.ui.Modal):
 class Marketplace(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
+
+        self.client.add_view(PurchaseView())
 
     market = app_commands.Group(name='market', description='🛒 Marketplace moderation commands', guild_ids=[Config.SERVER_ID])
 

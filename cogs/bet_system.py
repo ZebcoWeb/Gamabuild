@@ -183,7 +183,7 @@ class WheelCoinForm(discord.ui.Modal):
         else:
             await interaction.response.send_message(embed=error_embed('Please enter a number!'), ephemeral=True)
 
-class CasinoMenuView(discord.ui.View):
+class GamesMenuView(discord.ui.View):
     def __init__(self, cog: commands.Cog):
         super().__init__(timeout=None)
         self.cog = cog
@@ -220,6 +220,8 @@ class BetSystem(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client: commands.Bot = client
 
+        self.client.add_view(GamesMenuView(self))
+        
         self.coefficients = []
         self.weights = []
         for c, w in Config.WHEEL_BETS:
@@ -335,7 +337,7 @@ class BetSystem(commands.Cog):
         )
         em.set_image(url='https://cdn.discordapp.com/attachments/980177765452099654/994309417124237432/MiniGames.png')
         em.set_footer(text= 'GamaBuild' , icon_url='https://media.discordapp.net/attachments/980177765452099654/994267291820769373/Logo.png')
-        await casino_channel.send(embed=em, view=CasinoMenuView(cog=self))
+        await casino_channel.send(embed=em, view=GamesMenuView(cog=self))
         await ctx.reply(embed=success_embed('Games context sent'))
 
 

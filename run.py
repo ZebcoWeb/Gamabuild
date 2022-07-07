@@ -4,8 +4,8 @@ import os
 from discord import Intents, __version__, app_commands
 from discord.ext import commands
 
+from cogs.ticket import TicketView
 from config import Config
-from cogs.bet_system import CasinoMenuView
 from utils import init_database, error_embed
 
 
@@ -19,7 +19,7 @@ class CommandTree(app_commands.CommandTree):
         elif isinstance(error, app_commands.MissingRole):
             await interaction.response.send_message(embed=error_embed(f'You don\'t have the required role to use this command'), ephemeral=True)
         elif isinstance(error, app_commands.CommandOnCooldown):
-            secends = round(error.retry_after, 2)
+            secends = round(error.retry_after)
             await interaction.response.send_message(embed=error_embed(f'You are on cooldown for `{secends // 3600}` hours, `{secends // 60 % 60}` minutes and `{secends % 60}` seconds.'), ephemeral=True)
 
 class BotClient(commands.Bot):
@@ -63,8 +63,6 @@ Alright we are ready! - Gama Team
     - Library version -> {__version__}
 """)
         print('> Loaded extensions --> ' + ', '.join(self.extensions.keys()))
-
-        self.add_view(CasinoMenuView(cog=self.get_cog('BetSystem')))
         self.persistent_views_added = True
 
         members_number = 0
@@ -76,4 +74,4 @@ Alright we are ready! - Gama Team
 
 
 if __name__ == '__main__':
-    BotClient().run(Config.TOKEN)
+    BotClient().run(Config.TOKEN, log_handler=None)

@@ -2,14 +2,13 @@ import discord
 
 from discord.ext import commands
 
-from config import Channel, Config, Roles
+from config import Channel, Roles
 
 
 
 class SetRoleView(discord.ui.View):
-    def __init__(self, guild):
+    def __init__(self):
         super().__init__(timeout=None)
-        self.guild = guild
 
         self.menu = discord.ui.Select(
             custom_id='role_menu',
@@ -58,7 +57,8 @@ class SetRoleView(discord.ui.View):
 class Role(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
-        self.client.add_view(SetRoleView(self.client.guild))
+
+        self.client.add_view(SetRoleView())
 
     @commands.has_permissions(manage_guild=True)
     @commands.command()

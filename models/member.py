@@ -2,7 +2,7 @@ import discord
 
 from datetime import datetime
 from typing import Optional
-from beanie import Document, Indexed, after_event, Replace
+from beanie import Document, Indexed
 from pydantic import Field, conint, BaseModel
 
 class MemberShort(BaseModel):

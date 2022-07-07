@@ -7,14 +7,13 @@ from discord import ButtonStyle
 from config import Config, Roles, Channel, Emoji
 
 class FollowView(discord.ui.View):
-    def __init__(self, client):
+    def __init__(self):
         super().__init__(timeout=None)
-        self.client = client
 
     @discord.ui.button(label='Follow', custom_id='follow_button', style=ButtonStyle.green, emoji=discord.PartialEmoji.from_str(Emoji.FOLLOW))
     async def follow(self, interaction: discord.Interaction, button: discord.ui.Button):
         channel = interaction.channel
-        channel_product = await self.client.fetch_channel(Channel.PREMADE_MAPS)
+        channel_product = await interaction.client.fetch_channel(Channel.PREMADE_MAPS)
         if channel_product == channel:
             guild = interaction.guild
             member = interaction.user
@@ -62,7 +61,7 @@ class PremadeMap(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client: commands.Bot = client
 
-        self.client.add_view(FollowView(self.client))
+        self.client.add_view(FollowView())
 
     # Commands
     @commands.has_permissions(manage_guild=True)

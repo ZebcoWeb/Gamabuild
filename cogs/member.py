@@ -8,9 +8,8 @@ from models import MemberModel
 
 
 class VerifyView(discord.ui.View):
-    def __init__(self, client):
+    def __init__(self):
         super().__init__(timeout=None)
-        self.client = client
 
     @discord.ui.button(label='Verify', custom_id='verify_button', style=discord.ButtonStyle.green, emoji=discord.PartialEmoji.from_str(Emoji.VERIFY))
     async def verify_user(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -18,7 +17,7 @@ class VerifyView(discord.ui.View):
         guild = interaction.guild
         role_default = guild.get_role(Roles.TRAVELER)
         role_new = guild.get_role(Roles.NEW)
-        channel_join = self.client.get_channel(847806714840875069)
+        channel_join = await interaction.client.fetch_channel(Channel.VERIFY)
         if role_default not in member.roles:
             await MemberModel.find_one(MemberModel.member_id == member.id).update(Set({MemberModel.is_verified: True}))
             await member.remove_roles(role_new)
@@ -38,7 +37,6 @@ class Member(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client: discord.client = client
 
-        self.client.add_view(VerifyView(self.client))
         self.client.loop.create_task(self.leftover_members())
 
     async def leftover_members(self):
