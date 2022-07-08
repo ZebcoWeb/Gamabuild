@@ -17,7 +17,7 @@ class VerifyView(discord.ui.View):
         guild = interaction.guild
         role_default = guild.get_role(Roles.TRAVELER)
         role_new = guild.get_role(Roles.NEW)
-        channel_join = await interaction.client.fetch_channel(Channel.VERIFY)
+        channel_join = await interaction.client.fetch_channel(Channel.JOIN_LOG)
         if role_default not in member.roles:
             await MemberModel.find_one(MemberModel.member_id == member.id).update(Set({MemberModel.is_verified: True}))
             await member.remove_roles(role_new)
