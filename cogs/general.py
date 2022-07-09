@@ -42,6 +42,44 @@ class General(commands.Cog):
         embed.set_footer(text= 'GamaBuild' , icon_url='https://media.discordapp.net/attachments/980177765452099654/994267291820769373/Logo.png')
         await term_channel.send(embed=embed)
         await ctx.reply('> **Terms has been made!**')
+
+    
+    @commands.has_permissions(manage_guild=True)
+    @commands.command(aliases=["faq"])
+    async def _faq(self, ctx:commands.Context):
+        """Create new `FAQ` message"""
+
+        faq_channel = await self.client.fetch_channel(Channel.FAQ)
+        async for message in faq_channel.history(limit=None):
+            await message.delete()
+            
+        embed=discord.Embed(
+            title="<:questionmark:994300948295983265> **Frequently Asked Questions**",
+            description=f'''
+<:Logo:995257380696760380> - **What is GamaBuild?**
+We are a dedicated team of 4 members that takes pride in providing quality builds and entertaining media content.
+
+<:Services:994294419115233322> What services do we provide?
+We provide our services mostly in 2 forms of **Building Commissions** & **Media Platforms For Sponsors**.
+
+:pencil: **Is gamabuild reliable and legitimate?**
+To answer that question we have the <#769857325422608384> segment, in which you can see our recently done commissions and our clients reviews in the <#856903715608723456>!
+
+<:Microphone:789798501332156446> **How does the sponsorships work?**
+Our ways of covering the sponsor deals are vast and unique such as : Instagram posts with inner slide sponsor segments , Custom sponsored events and Discord ads.
+
+:bricks: **Why GamaBuild?**
+Our work comes with a range of perfected building , organic work and level designing skills that has no limits in terms of style and theme and when it comes to pricing we try to offer the most fair prices for the time that is being spent here on gamabuild.
+
+<:Approved:789798412710445087> **How can you approach us for placing a commission or offering sponsorships?**
+The section <#789777105201397811> is made specifically for those who wish to order a project or hit us with a sponsorship deal!
+''',
+            color=0xFB005B
+        )
+        embed.set_image(url='https://media.discordapp.net/attachments/980177765452099654/995256982258864158/faq.png')
+        embed.set_footer(text= 'GamaBuild' , icon_url='https://media.discordapp.net/attachments/980177765452099654/994267291820769373/Logo.png')
+        await faq_channel.send(embed=embed)
+        await ctx.reply('> **FAQ has been made!**')
     
     @commands.has_permissions(manage_guild=True)
     @commands.command(aliases=["clear"])

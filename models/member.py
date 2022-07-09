@@ -42,7 +42,7 @@ class MemberModel(Document):
 
     @property
     def level(self):
-        return self.xp // 1000
+        return self.xp // 500
 
     @staticmethod
     async def join_member(member: discord.Member, verified: bool = False):
@@ -67,7 +67,7 @@ class MemberModel(Document):
                 member_model.is_verified = False
                 member_model.leaved_at = datetime.now()
                 await member_model.save()
-    
+
     @staticmethod
     async def members_id_list():
         query = await MemberModel.find({}).project(MemberShort).to_list()

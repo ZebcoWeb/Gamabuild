@@ -19,7 +19,7 @@ class PurchaseButtom(discord.ui.Button):
         super().__init__(
             label='Purchase',
             style=discord.ButtonStyle.green,
-            emoji=discord.PartialEmoji.from_str(Emoji.PURCHASE),
+            emoji=discord.PartialEmoji.from_str('<:download:995385680811274281>'),
             custom_id='purchase_button'
         )
     
@@ -36,6 +36,15 @@ class PurchaseButtom(discord.ui.Button):
                     embed=success_embed(f'You have purchased ***{product.title}***\n\n {Emoji.DOWNLOAD} Download Link: [[Click Here]]({product.product_url})'),
                     ephemeral=True
                 )
+                new_embed = interaction.message.embeds[0]
+                new_embed.set_field_at(
+                    index=1,
+                    name='**Downloads:**',
+                    value=f'{len(product.buyers)} <:download:995385680811274281>',
+                    inline=True
+                )
+                await interaction.message.edit(embed=new_embed)
+
             else:
                 await interaction.response.send_message(
                     embed=error_embed(f'You have not enough **Gamacoins [{product.price}]** to purchase this product.'),
@@ -80,13 +89,15 @@ class AddProductForm(discord.ui.Modal):
 
         marketplace_channel = await interaction.guild.fetch_channel(Channel.MARKETPLACE)
         em = discord.Embed(
-            title='🛍️ ' + self.titlee.value,
-            description=self.description.value,
-            color=discord.Color.blue()
+            title='<:Market:994293107120160788> ' + self.titlee.value,
+            description='<:Terms:994313748556808253> ● ' + self.description.value,
+            color=0xFB005B
         )
+        em.set_footer(text='Click on the Purchase button to download the map', icon_url='https://cdn.discordapp.com/attachments/980177765452099654/995383740144549919/twotone_info_white_24dp.png')
         if self.media.value:
             em.set_image(url=self.media.value)
-        em.add_field(name='Price', value=self.price.value, inline=True)
+        em.add_field(name='**Price:**', value=f'{price} <:GamaCoin:994292311271944274>', inline=True)
+        em.add_field(name='**Downloads:**', value='0 <:download:995385680811274281>', inline=True)
 
         product_message = await marketplace_channel.send(embed=em, view=PurchaseView())
         product_model = ProductModel(
@@ -103,6 +114,7 @@ class AddProductForm(discord.ui.Modal):
             embed=success_embed(f'Product added successfully: [[Click here]]({product_message.jump_url})'), 
             ephemeral=True
         )
+
 
 
 
