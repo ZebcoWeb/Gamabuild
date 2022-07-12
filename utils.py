@@ -18,15 +18,15 @@ def error_embed(msg: str, color = None):
         color = color if color else Config.DISCORD_COLOR
     )   
 
-def inspect_models():
+def inspect_models(discord_client):
     models = []
     for name, obj in inspect.getmembers(importlib.import_module('models')):
         if inspect.isclass(obj):
             if issubclass(obj, Document):
-
                 if name in Config.IGNORE_MODELS:
                     pass
                 else:
+                    setattr(obj, 'discord_client', discord_client)
                     models.append(obj)
     return models
 
@@ -40,7 +40,7 @@ def get_guide_number(secret_num: int, guess_num: int, max_number: int):
 
     return guide_num, guide_msg
 
-async def init_database(loop: asyncio.AbstractEventLoop = None):
+async def init_database(loop: asyncio.AbstractEventLoop = None, discord_client: discord.Client = None):
     
     client = motor.motor_asyncio.AsyncIOMotorClient(
         host=DB.HOST,
@@ -56,7 +56,7 @@ async def init_database(loop: asyncio.AbstractEventLoop = None):
 
         if info['ok'] == 1.0:
 
-            models = inspect_models()
+            models = inspect_models(discord_client)
 
             await init_beanie(
                 database= client[DB.DATABASE],

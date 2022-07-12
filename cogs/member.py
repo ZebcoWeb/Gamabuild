@@ -37,6 +37,7 @@ class Member(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client: discord.client = client
 
+        self.client.add_view(VerifyView())
         self.client.loop.create_task(self.leftover_members())
 
     async def leftover_members(self):

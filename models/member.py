@@ -1,9 +1,12 @@
+import random
 import discord
 
 from datetime import datetime
 from typing import Optional
-from beanie import Document, Indexed
+from beanie import Document, Indexed, after_event, Replace 
 from pydantic import Field, conint, BaseModel
+
+from config import Channel
 
 class MemberShort(BaseModel):
     member_id: int
@@ -17,6 +20,9 @@ class MemberModel(Document):
 
     last_do_daily: Optional[datetime]
     last_do_weekly: Optional[datetime]
+
+    last_level = 0
+    last_jackpot = 0
 
     cmd_guess_use = 0
     cmd_guess_lose = 0
@@ -85,3 +91,22 @@ class MemberModel(Document):
     async def members_id_list():
         query = await MemberModel.find({}).project(MemberShort).to_list()
         return [member.member_id for member in query]
+
+    @after_event([Replace])
+    async def on_update(self):
+        if self.level > self.last_level:
+            channel: discord.TextChannel = await self.discord_client.fetch_channel(Channel.ACTIVITIES)
+            levelup_value = self.level - self.last_level
+            won_coin = (random.randint(1, 7)) * levelup_value
+            self.gamacoin += won_coin
+            self.last_level = self.level
+            await self.save()
+            await channel.send(f'🎖️ ● <@{self.member_id}> just leveled up to **{self.level}** <:stats:994300647082041534> and won **{won_coin}** <:GamaCoin:994292311271944274>')
+        
+        if (self.level // 10) > self.last_jackpot:
+            channel: discord.TextChannel = await self.discord_client.fetch_channel(Channel.ACTIVITIES)
+            levelup_value = self.level // 10 - self.last_jackpot
+            won_coin = (random.randint(5, 20)) * levelup_value
+            self.last_jackpot += levelup_value
+            await self.save()
+            await channel.send(f'🎰 ● <@{self.member_id}> got {won_coin} <:GamaCoin:994292311271944274> for Jackpot!')

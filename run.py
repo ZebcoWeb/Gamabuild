@@ -4,7 +4,6 @@ import os
 from discord import Intents, __version__, app_commands
 from discord.ext import commands
 
-from cogs.ticket import TicketView
 from config import Config
 from utils import init_database, error_embed
 
@@ -35,7 +34,7 @@ class BotClient(commands.Bot):
     async def setup_hook(self):
 
         # Initial database
-        await init_database(loop=self.loop)
+        await init_database(loop=self.loop, discord_client=self)
 
         self.guild = await self.fetch_guild(Config.SERVER_ID)
         self.ctx_menus = []
