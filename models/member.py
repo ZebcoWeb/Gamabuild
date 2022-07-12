@@ -15,14 +15,16 @@ class MemberModel(Document):
     gamacoin: conint(ge=0) = 0
     xp: conint(ge=0) = 0
 
-    last_do_daily: Optional[datetime] = None
-    last_do_weekly: Optional[datetime] = None
+    last_do_daily: Optional[datetime]
+    last_do_weekly: Optional[datetime]
 
     cmd_guess_use = 0
     cmd_guess_lose = 0
     cmd_guess_won = 0
 
     wheel_use = 0
+
+    invite_url: Optional[str]
 
     is_verified: bool = False
     is_staff: bool = False
@@ -43,6 +45,17 @@ class MemberModel(Document):
     @property
     def level(self):
         return self.xp // 500
+
+    async def get_or_create_invite(self, target_channel: discord.TextChannel):
+        if not self.invite_url:
+            invite = await target_channel.create_invite(
+                max_age=0, 
+                max_uses=0,
+                unique=True,
+            )
+            self.invite_url = invite.url
+            await self.save()
+        return self.invite_url
 
     @staticmethod
     async def join_member(member: discord.Member, verified: bool = False):

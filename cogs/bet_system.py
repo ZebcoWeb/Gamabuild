@@ -266,6 +266,7 @@ class BetSystem(commands.Cog):
     
     async def profile(self, interaction: discord.Interaction):
         member = await MemberModel.find_one(MemberModel.member_id == interaction.user.id)
+        verify_channel = await self.client.fetch_channel(Channel.VERIFY)
         em = discord.Embed(
             title=f'👤 {interaction.user.name}',
             description=f'<:stats:994300647082041534> Level 0 | <:rank:994510151824453682> Rank 1\n\u200b',
@@ -274,6 +275,7 @@ class BetSystem(commands.Cog):
         em.add_field(name='<:CHEST:994300228108828734> **Gamacoin**', value=f'{member.gamacoin} Coin', inline=True)
         em.add_field(name='\u200b', value=f'\u200b', inline=True)
         em.add_field(name='<:LevelUP:994295516206735440> **XP**', value=f'{member.xp}', inline=True)
+        em.add_field(name='<:Entertainment:994294738566008872> **Your Custom Invite Link:**', value=f'{await member.get_or_create_invite(verify_channel)}', inline=False)
         em.set_thumbnail(url=interaction.user.avatar.url)
         await interaction.response.send_message(embed=em, ephemeral=True)
 

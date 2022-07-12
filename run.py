@@ -69,7 +69,6 @@ Alright we are ready! - Gama Team
         async for member in self.guild.fetch_members(limit=None):
             if member.bot == False:
                 members_number += 1
-                
         await self.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f'{members_number} Members'))
 
 

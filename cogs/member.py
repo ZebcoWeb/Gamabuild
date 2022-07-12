@@ -105,7 +105,12 @@ class Member(commands.Cog):
         em.set_thumbnail(url=member.avatar.url)
         await channel.send(embed=em)
 
-        await self.client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f'{self.client.guild.member_count} Members'))
+        members_number = 0
+        async for member in self.client.guild.fetch_members(limit=None):
+            if member.bot == False:
+                members_number += 1
+
+        await self.client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f'{members_number} Members'))
     
 
     @commands.Cog.listener('on_member_remove')
@@ -120,8 +125,13 @@ class Member(commands.Cog):
         )
         # em.set_thumbnail(url= member.avatar.url)
         await channel.send(embed=em)
+
+        members_number = 0
+        async for member in self.client.guild.fetch_members(limit=None):
+            if member.bot == False:
+                members_number += 1
         
-        await self.client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f'{self.client.guild.member_count} Members'))
+        await self.client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f'{members_number} Members'))
 
 async def setup(client: commands.Bot):
     await client.add_cog(Member(client))

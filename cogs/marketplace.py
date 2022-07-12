@@ -19,7 +19,7 @@ class PurchaseButtom(discord.ui.Button):
         super().__init__(
             label='Purchase',
             style=discord.ButtonStyle.green,
-            emoji=discord.PartialEmoji.from_str('<:download:995385680811274281>'),
+            emoji=discord.PartialEmoji.from_str('<:purchase:992740103992660038>'),
             custom_id='purchase_button'
         )
     
