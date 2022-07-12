@@ -307,7 +307,7 @@ class BetSystem(commands.Cog):
         member_model.gamacoin += coin
         await member_model.save()
         await interaction.response.send_message(embed=success_embed(f'{member.mention} has received {coin} coin'), ephemeral=True)
-        await log_channel.send(f'<:CHEST:994300228108828734> ● {interaction.user.mention} was gifted **{coin}** <:GamaCoin:994292311271944274>!')
+        await log_channel.send(f'<:CHEST:994300228108828734> ● {member.mention} was gifted **{coin}** <:GamaCoin:994292311271944274>!')
 
     @app_commands.command(name='xp', description='🏆 Give xp to a user')
     @app_commands.checks.has_permissions(administrator=True)
@@ -319,7 +319,7 @@ class BetSystem(commands.Cog):
         member_model.xp += xp
         await member_model.save()
         await interaction.response.send_message(embed=success_embed(f'{member.mention} has received {xp}xp'), ephemeral=True)
-        await log_channel.send(f'<:LevelUP:994295516206735440> ● {interaction.user.mention} was gifted **{xp}xp** <:stats:994300647082041534>!')
+        await log_channel.send(f'<:LevelUP:994295516206735440> ● {member.mention} was gifted **{xp}xp** <:stats:994300647082041534>!')
 
     @commands.has_permissions(manage_guild=True)
     @commands.command(aliases=["minigame"])
