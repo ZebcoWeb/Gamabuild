@@ -108,5 +108,6 @@ class MemberModel(Document):
             levelup_value = self.level // 10 - self.last_jackpot
             won_coin = (random.randint(5, 20)) * levelup_value
             self.last_jackpot += levelup_value
+            self.gamacoin += won_coin
             await self.save()
             await channel.send(f'🎰 ● <@{self.member_id}> got {won_coin} <:GamaCoin:994292311271944274> for Jackpot!')
