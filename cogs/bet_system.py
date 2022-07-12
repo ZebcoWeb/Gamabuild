@@ -269,7 +269,7 @@ class BetSystem(commands.Cog):
         verify_channel = await self.client.fetch_channel(Channel.VERIFY)
         em = discord.Embed(
             title=f'👤 {interaction.user.name}',
-            description=f'<:stats:994300647082041534> Level 0 | <:rank:994510151824453682> Rank 1\n\u200b',
+            description=f'<:stats:994300647082041534> Level {member.level} | <:rank:994510151824453682> Rank 1\n\u200b',
             color=0xff2a65
         )
         em.add_field(name='<:CHEST:994300228108828734> **Gamacoin**', value=f'{member.gamacoin} Coin', inline=True)
