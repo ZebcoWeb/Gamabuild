@@ -52,24 +52,23 @@ class MemberModel(Document):
     def level(self):
         return self.xp // 500
 
-    async def get_or_create_invite(self, target_channel: discord.TextChannel):
-        if not self.invite_url:
-            invite = await target_channel.create_invite(
+    @property
+    def rank(self):
+        return self.level // 10
+
+    @staticmethod
+    async def join_member(member: discord.Member, invite_channel: discord.TextChannel, verified: bool = False):
+        member_model = await MemberModel.find_one(MemberModel.member_id == member.id)
+        if not member_model:
+            invite = await invite_channel.create_invite(
                 max_age=0, 
                 max_uses=0,
                 unique=True,
             )
-            self.invite_url = invite.url
-            await self.save()
-        return self.invite_url
-
-    @staticmethod
-    async def join_member(member: discord.Member, verified: bool = False):
-        member_model = await MemberModel.find_one(MemberModel.member_id == member.id)
-        if not member_model:
             member_model = MemberModel(
                 member_id = member.id,
-                is_verified = verified
+                is_verified = verified,
+                invite_url=invite.url
             )
             await member_model.save()
         else:

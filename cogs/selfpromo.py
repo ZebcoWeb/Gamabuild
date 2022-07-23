@@ -5,6 +5,7 @@ from discord.ext import commands
 
 from config import Channel
 from models import MemberModel
+from utils import error_embed
 
 class SelfPromo(commands.Cog):
     def __init__(self, client: commands.Bot):

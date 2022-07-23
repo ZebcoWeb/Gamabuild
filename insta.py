@@ -1,11 +1,4 @@
-import re
-import json
-import sys
-import requests
-import urllib.request
-import os
-import time
-from discord_webhook import DiscordWebhook, DiscordEmbed
+
 
 
 INSTAGRAM_USERNAME = 'gamabuild'
