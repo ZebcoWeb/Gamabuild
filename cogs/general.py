@@ -179,10 +179,10 @@ The section <#789777105201397811> is made specifically for those who wish to ord
 
 **▬▬▬[How to gain Gama Coins]▬▬▬**
 
-:stats: ● Each time you level up you gain **1 - 7 Gama Coins** <:GamaCoin:994292311271944274>.
-:rank: ● Every 10 level you rank up and you get a chance for the jackpot which contains a mass amount of **Gama Coins** <:GamaCoin:994292311271944274> .
+<:stats:994300647082041534> ● Each time you level up you gain **1 - 7 Gama Coins** <:GamaCoin:994292311271944274>.
+<:rank:994510151824453682> ● Every 10 level you rank up and you get a chance for the jackpot which contains a mass amount of **Gama Coins** <:GamaCoin:994292311271944274> .
 :game_die: ● You can earn **Gama Coins** <:GamaCoin:994292311271944274> by gambling them in the <#{Channel.CASINO}> channel .
-:Microphone: ● Custom Events/Tournaments/Giveaways also contain **Gama Coins** <:GamaCoin:994292311271944274> as prizes .
+<:Microphone:789798501332156446> ● Custom Events/Tournaments/Giveaways also contain **Gama Coins** <:GamaCoin:994292311271944274> as prizes .
 
 **You can also check your stats by clicking on the :bust_in_silhouette: Profile button in the <#{Channel.CASINO}> channel !**
 '''

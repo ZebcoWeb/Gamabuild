@@ -51,10 +51,11 @@ class VoiceGenerator(commands.Cog):
                     if voice_status:
                         voicetime = datetime.now() - voice_status.join_time
                         if voicetime > timedelta(minutes=1):
-                            bonus_xp = int(voicetime.total_seconds() // 60)
-                            await MemberModel.find_one(MemberModel.member_id == member.id).update(
-                                {Inc(MemberModel.xp, bonus_xp)}
-                            )
+                            bonus_xp = (int(voicetime.total_seconds() // 60)) * 5
+                            member = await MemberModel.find_one(MemberModel.member_id == member.id)
+                            member.xp += bonus_xp
+                            await member.save()
+
                         voice_status.delete()
 
 
