@@ -1,10 +1,15 @@
 import discord
 
+from datetime import datetime, timedelta
+
+from beanie.odm.operators.update.general import Inc
 from discord.ext import commands
 from discord import app_commands
 
 from config import Channel, Config
+from models import MemberModel
 from utils import error_embed, success_embed
+from cache import VoiceTime
 
 
 class VoiceGenerator(commands.Cog):
@@ -32,6 +37,9 @@ class VoiceGenerator(commands.Cog):
                     video_quality_mode=discord.VideoQualityMode.auto
                 )
                 await member.move_to(general_vc)
+                VoiceTime(
+                    member_id=member.id
+                ).save()
     
     @commands.Cog.listener('on_voice_state_update')
     async def filter_inactive_voices(self, member, before, after):
@@ -39,7 +47,16 @@ class VoiceGenerator(commands.Cog):
             if before.channel.id not in [Channel.NEW_VC_SESSION, Channel.INVITE, Channel.PUBLIC, Channel.MUSIC] and before.channel.category_id == Channel.VOICE_CATEGORY:
                 if len(before.channel.members) == 0:
                     await before.channel.delete()
-    
+                    voice_status = VoiceTime.get_by(member_id=member.id)
+                    if voice_status:
+                        voicetime = datetime.now() - voice_status.join_time
+                        if voicetime > timedelta(minutes=1):
+                            bonus_xp = int(voicetime.total_seconds() // 60)
+                            await MemberModel.find_one(MemberModel.member_id == member.id).update(
+                                {Inc(MemberModel.xp, bonus_xp)}
+                            )
+                        voice_status.delete()
+
 
     @app_commands.command(name='add', description='➕ Invite a user to a voice channel')
     @app_commands.guilds(Config.SERVER_ID)

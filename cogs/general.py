@@ -1,10 +1,11 @@
 import discord
-import re
 
 from discord.ext import commands
+from discord import app_commands
 
 from config import Channel, Config
 from models import MemberModel
+from utils import check_media
 
 class General(commands.Cog):
     def __init__(self, client: commands.Bot):
@@ -162,24 +163,38 @@ The section <#789777105201397811> is made specifically for those who wish to ord
                 await channel.send(embed=embed,content='@everyone')
                 await ctx.reply(f'> **Message sent.**')
 
+    @app_commands.command(name='help', description='🚩 Help command')
+    @app_commands.guilds(Config.SERVER_ID)
+    async def weekly(self, interaction: discord.Interaction):
+        help_context = f'''
+**▬▬▬[How to gain xp]▬▬▬**
 
-    # Events 
-    
-    def check_media(self, message):
-        if message.content:
-            if not re.match(r'(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png|mp4|jpeg|webm|mov|mp3)', message.content):
-                return False
-        if len(message.attachments) > 0:
-            for attachment in message.attachments:
-                if not attachment.content_type.startswith(('image/', 'video/', 'audio/')):
-                    return False
-        return True
+:speech_balloon: ● By chatting in the <#{Channel.CHITCHAT}> you can gain **xp** .
+<:add:994525256289108069> ● You can gain **xp** by inviting your friends .
+:rocket: ● Boosting the server also boosts your **experience** and gives you more** Gama Coins <:GamaCoin:994292311271944274>.
+:microphone: ● Every minute that you spend in a public/private voice channel gives you **xp** .
+<:Games:994293396128673852> ● Playing games in the <#{Channel.CASINO}> channel gives you **xp** .
+:performing_arts: ● You can also gain **xp** from posting memes in the <#{Channel.MEME}> channel .
+:gift: ● Every day/week you can gain **xp** by typing /daily - /weekly in the <#{Channel.ACTIVITIES}> channel .
+
+**▬▬▬[How to gain Gama Coins]▬▬▬**
+
+:stats: ● Each time you level up you gain **1 - 7 Gama Coins** <:GamaCoin:994292311271944274>.
+:rank: ● Every 10 level you rank up and you get a chance for the jackpot which contains a mass amount of **Gama Coins** <:GamaCoin:994292311271944274> .
+:game_die: ● You can earn **Gama Coins** <:GamaCoin:994292311271944274> by gambling them in the <#{Channel.CASINO}> channel .
+:Microphone: ● Custom Events/Tournaments/Giveaways also contain **Gama Coins** <:GamaCoin:994292311271944274> as prizes .
+
+**You can also check your stats by clicking on the :bust_in_silhouette: Profile button in the <#{Channel.CASINO}> channel !**
+'''
+        await interaction.response.send_message(content=help_context, ephemeral=True)
+
+    # Events
 
     @commands.Cog.listener('on_message')
     async def meme_channel_handler(self, message: discord.Message):
         if message.channel.id == Channel.MEME and message.author.bot == False:
             if message.content or message.attachments != []:
-                if self.check_media(message):
+                if check_media(message):
                     await MemberModel.find_one(MemberModel.member_id == message.author.id).inc({MemberModel.xp: Config.INC_XP_MEME})
                     await message.create_thread(name='💭 Comments', auto_archive_duration=10080)
                 else:

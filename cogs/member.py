@@ -35,7 +35,7 @@ class VerifyView(discord.ui.View):
 
 class Member(commands.Cog):
     def __init__(self, client: commands.Bot):
-        self.client: discord.client = client
+        self.client: discord.Client = client
 
         self.client.add_view(VerifyView())
         self.client.loop.create_task(self.leftover_members())
@@ -88,10 +88,11 @@ class Member(commands.Cog):
         guild = await self.client.fetch_guild(Config.SERVER_ID)
         async for user in guild.fetch_members(limit=None):
             await user.add_roles(Roles.NEW)
-        
+
     @commands.Cog.listener('on_member_join')
     async def member_join_handler(self, member):
-        await MemberModel.join_member(member)
+        invite_channel = await self.client.fetch_channel(Channel.VERIFY)
+        await MemberModel.join_member(member, invite_channel=invite_channel)
 
         channel = await self.client.guild.fetch_channel(Channel.JOIN_LOG)
         role = self.client.guild.get_role(Roles.NEW)

@@ -1,22 +1,34 @@
-import sys, motor, asyncio, inspect, importlib, discord, random
+import sys, motor, asyncio, inspect, importlib, discord, random, re, rom
 
 from beanie import init_beanie, Document
+from redis import exceptions
 
 from config import Config, DB
+from cache import VoiceTime
 
 
 
 def success_embed(msg: str, color = None):
     return discord.Embed(
-        description = ':white_check_mark: ' + msg,
+        description = msg,
         color = color if color else Config.DISCORD_COLOR
     )
 
 def error_embed(msg: str, color = None):
     return discord.Embed(
-        description = ':exclamation: ' + msg,
+        description = msg,
         color = color if color else Config.DISCORD_COLOR
     )   
+
+def check_media(message):
+        if message.content:
+            if not re.match(r'(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png|mp4|jpeg|webm|mov|mp3)', message.content):
+                return False
+        if len(message.attachments) > 0:
+            for attachment in message.attachments:
+                if not attachment.content_type.startswith(('image/', 'video/', 'audio/')):
+                    return False
+        return True
 
 def inspect_models(discord_client):
     models = []
@@ -69,7 +81,31 @@ async def init_database(loop: asyncio.AbstractEventLoop = None, discord_client: 
             sys.exit(1)
 
     except Exception as e:
+        raise e
         print('> Could not connect to database!')
         print('> Exiting...')
         sys.exit(1)
 
+def init_cache():
+
+    rom.util.set_connection_settings(
+        host='localhost',
+        port=6379,
+        db=0,
+    )
+    client = rom.util.get_connection()
+
+    try:
+        info = client.info()
+        print(' └ Cache server is alive. Redis version: ' + info['redis_version'])
+        for i in VoiceTime.query.all():
+            i.delete()
+    except exceptions.ConnectionError:
+        print('> Cache server is not available.')
+        print('> Exiting...')
+        sys.exit(1)
+    
+    except exceptions.AuthenticationError:
+        print('> Cache server authentication failed.')
+        print('> Exiting...')
+        sys.exit(1)

@@ -52,6 +52,10 @@ class MemberModel(Document):
     def level(self):
         return self.xp // 500
 
+    @property
+    def rank(self):
+        return self.level // 10
+
     async def get_or_create_invite(self, target_channel: discord.TextChannel):
         if not self.invite_url:
             invite = await target_channel.create_invite(

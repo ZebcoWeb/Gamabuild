@@ -5,7 +5,7 @@ from discord import Intents, __version__, app_commands
 from discord.ext import commands
 
 from config import Config
-from utils import init_database, error_embed
+from utils import init_database, error_embed, init_cache
 
 
 class CommandTree(app_commands.CommandTree):
@@ -35,6 +35,9 @@ class BotClient(commands.Bot):
 
         # Initial database
         await init_database(loop=self.loop, discord_client=self)
+
+        # Initial cache
+        init_cache()
 
         self.guild = await self.fetch_guild(Config.SERVER_ID)
         self.ctx_menus = []

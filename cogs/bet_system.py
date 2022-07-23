@@ -2,7 +2,7 @@ import discord
 import random
 import re
 
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord import app_commands
 
 from config import Config, Channel
@@ -220,7 +220,11 @@ class BetSystem(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client: commands.Bot = client
 
+
         self.client.add_view(GamesMenuView(self))
+
+        self.last_activities_message = None
+        # self.activities_guide_message.start()
         
         self.coefficients = []
         self.weights = []
@@ -269,7 +273,7 @@ class BetSystem(commands.Cog):
         verify_channel = await self.client.fetch_channel(Channel.VERIFY)
         em = discord.Embed(
             title=f'👤 {interaction.user.name}',
-            description=f'<:stats:994300647082041534> Level {member.level} | <:rank:994510151824453682> Rank 1\n\u200b',
+            description=f'<:stats:994300647082041534> Level {member.level} | <:rank:994510151824453682> Rank {member.rank}\n\u200b',
             color=0xff2a65
         )
         em.add_field(name='<:CHEST:994300228108828734> **Gamacoin**', value=f'{member.gamacoin} Coin', inline=True)
@@ -342,6 +346,36 @@ class BetSystem(commands.Cog):
         await casino_channel.send(embed=em, view=GamesMenuView(cog=self))
         await ctx.reply(embed=success_embed('Games context sent'))
 
+    @tasks.loop(seconds=10)
+    async def activities_guide_message(self):
+        channel = await self.client.fetch_channel(Channel.ACTIVITIES)
+        if self.activities_guide_message:
+            last_message = await channel.fetch_message(self.activities_guide_message)
+            await last_message.delete()
+
+        message = await channel.send(content=f'''
+**▬▬▬[How to gain xp]▬▬▬**
+
+:speech_balloon: ● By chatting in the <#{Channel.CHITCHAT}> you can gain **xp** .
+<:add:994525256289108069> ● You can gain **xp** by inviting your friends .
+:rocket: ● Boosting the server also boosts your **experience** and gives you more** Gama Coins <:GamaCoin:994292311271944274>.
+:microphone: ● Every minute that you spend in a public/private voice channel gives you **xp** .
+<:Games:994293396128673852> ● Playing games in the <#{Channel.CASINO}> channel gives you **xp** .
+:performing_arts: ● You can also gain **xp** from posting memes in the <#{Channel.MEME}> channel .
+:gift: ● Every day/week you can gain **xp** by typing /daily - /weekly in the <#{Channel.ACTIVITIES}> channel .
+
+**▬▬▬[How to gain Gama Coins]▬▬▬**
+
+:stats: ● Each time you level up you gain **1 - 7 Gama Coins** <:GamaCoin:994292311271944274>.
+:rank: ● Every 10 level you rank up and you get a chance for the jackpot which contains a mass amount of **Gama Coins** <:GamaCoin:994292311271944274> .
+:game_die: ● You can earn **Gama Coins** <:GamaCoin:994292311271944274> by gambling them in the <#{Channel.CASINO}> channel .
+:Microphone: ● Custom Events/Tournaments/Giveaways also contain **Gama Coins** <:GamaCoin:994292311271944274> as prizes .
+
+**You can also check your stats by clicking on the :bust_in_silhouette: Profile button in the <#{Channel.CASINO}> channel !**
+'''
+        )
+        self.activities_guide_message = message.id
+        
 
 async def setup(client: commands.Bot):
     await client.add_cog(BetSystem(client))
