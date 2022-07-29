@@ -358,21 +358,20 @@ class BetSystem(commands.Cog):
 
 :speech_balloon: ● By chatting in the <#{Channel.CHITCHAT}> you can gain **xp** .
 <:add:994525256289108069> ● You can gain **xp** by inviting your friends .
-:rocket: ● Boosting the server also boosts your **experience** and gives you more** Gama Coins <:GamaCoin:994292311271944274>.
+:rocket: ● Boosting the server also boosts your **experience** and gives you more **Gama Coins** <:GamaCoin:994292311271944274>.
 :microphone: ● Every minute that you spend in a public/private voice channel gives you **xp** .
-<:Games:994293396128673852> ● Playing games in the <#{Channel.CASINO}> channel gives you **xp** .
-:performing_arts: ● You can also gain **xp** from posting memes in the <#{Channel.MEME}> channel .
+<:Games:994293396128673852> ● Playing games in the <#{Channel.CASINO}> channel gives you xp .
+:performing_arts: ● You can also gain xp from posting memes in the <#{Channel.MEME}> channel .
 :gift: ● Every day/week you can gain **xp** by typing /daily - /weekly in the <#{Channel.ACTIVITIES}> channel .
 
 **▬▬▬[How to gain Gama Coins]▬▬▬**
 
 <:stats:994300647082041534> ● Each time you level up you gain **1 - 7 Gama Coins** <:GamaCoin:994292311271944274>.
-<:rank:994510151824453682> ● Every 10 level you rank up and you get a chance for the jackpot which contains a mass amount of **Gama Coins** <:GamaCoin:994292311271944274> .
+<:rank:994510151824453682> ● Every 10 level you rank up and you get a chance for the jackpot which contains a mass amount of **Gama Coins** <:GamaCoin:994292311271944274>.
 :game_die: ● You can earn **Gama Coins** <:GamaCoin:994292311271944274> by gambling them in the <#{Channel.CASINO}> channel .
 <:Microphone:789798501332156446> ● Custom Events/Tournaments/Giveaways also contain **Gama Coins** <:GamaCoin:994292311271944274> as prizes .
 
-**You can also check your stats by clicking on the :bust_in_silhouette: Profile button in the <#{Channel.CASINO}> channel !**
-'''
+**You can also check your stats by clicking on the :bust_in_silhouette: Profile button in the <#{Channel.CASINO}> channel ! **'''
         )
         self.last_activities_message = message
         
