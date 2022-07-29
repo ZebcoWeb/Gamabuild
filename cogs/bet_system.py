@@ -278,7 +278,7 @@ class BetSystem(commands.Cog):
         )
         em.add_field(name='<:CHEST:994300228108828734> **Gamacoin**', value=f'{member.gamacoin} Coin', inline=True)
         em.add_field(name='\u200b', value=f'\u200b', inline=True)
-        em.add_field(name='<:LevelUP:994295516206735440> **XP**', value=f'{member.xp}', inline=True)
+        em.add_field(name='<:LevelUP:994295516206735440> **XP**', value=f'{member.xp} / 500', inline=True)
         em.add_field(name='<:Entertainment:994294738566008872> **Your Custom Invite Link:**', value=f'{await member.get_or_create_invite(verify_channel)}', inline=False)
         em.set_thumbnail(url=interaction.user.avatar.url)
         await interaction.response.send_message(embed=em, ephemeral=True)
