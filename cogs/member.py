@@ -30,6 +30,26 @@ class VerifyView(discord.ui.View):
             )
             em.set_thumbnail(url= member.avatar.url)
             await channel_join.send(embed=em)
+            welcome_content = '''
+<:Logo:995257380696760380> **Well Traveler !**
+- We are thrilled to have you here in Gama Build Discord Server ! here are some info that we would like you to know about Gama Build's server :
+
+<:Market:994293107120160788> **● Market Place :** Download builds and maps with **Gama Coins**<:GamaCoin:994292311271944274>!
+
+<:stats:994300647082041534> **● Activities :** Keep track of your daily activities and get rewarded by doing /daily and /weekly in there !
+
+<:Games:994293396128673852> **● Games :** Invest **Gama Coins**<:GamaCoin:994292311271944274> and take chance in games like the wheel and guess the number for a chance of doubling your Gama Coins !
+
+<:Services:994294419115233322>  **● Tickets :** In this section you can order a commission , place a sponsor offer or just simply get in contact with us !
+
+<:questionmark:994300948295983265> **● FAQ :** You can find an answer for most of your questions in here !
+
+<:Entertainment:994294738566008872> **● Invite :** With this option you can invite your friends and make private voice sessions !
+'''
+            try:
+                await member.send(welcome_content)
+            except:
+                pass
         await interaction.response.defer(ephemeral=True)
 
 

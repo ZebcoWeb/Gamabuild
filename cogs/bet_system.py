@@ -346,7 +346,7 @@ class BetSystem(commands.Cog):
         await casino_channel.send(embed=em, view=GamesMenuView(cog=self))
         await ctx.reply(embed=success_embed('Games context sent'))
 
-    @tasks.loop(hours=1)
+    @tasks.loop(hours=6)
     async def activities_guide_message(self):
         channel = await self.client.fetch_channel(Channel.ACTIVITIES)
         

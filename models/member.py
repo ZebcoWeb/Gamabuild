@@ -21,7 +21,7 @@ class MemberModel(Document):
     last_do_daily: Optional[datetime]
     last_do_weekly: Optional[datetime]
 
-    last_level = 0
+    last_level = 1
     last_jackpot = 0
 
     cmd_guess_use = 0
@@ -50,11 +50,11 @@ class MemberModel(Document):
 
     @property
     def level(self):
-        return self.xp // 500
+        return (self.xp // 500) + 1
 
     @property
     def rank(self):
-        return self.level // 10
+        return (self.level // 10) + 1
 
     async def get_or_create_invite(self, target_channel: discord.TextChannel):
         if not self.invite_url:
