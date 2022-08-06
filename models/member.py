@@ -106,7 +106,6 @@ class MemberModel(Document):
             self.last_level = self.level
             await self.save()
             await channel.send(f'🎖️ ● <@{self.member_id}> just leveled up to **{self.level}** <:stats:994300647082041534> and won **{won_coin}** <:GamaCoin:994292311271944274>')
-        
         if (self.level // 10) > self.last_jackpot:
             channel: discord.TextChannel = await self.discord_client.fetch_channel(Channel.ACTIVITIES)
             levelup_value = self.level // 10 - self.last_jackpot
