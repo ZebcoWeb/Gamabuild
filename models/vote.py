@@ -7,7 +7,9 @@ from pydantic import Field
 class VoteModel(Document):
 
     builder: str
+    caption: str
     picture_url: str
+    instagram_profile_url: str
     message_id: Optional[int]
     
     voters: List[int] = []

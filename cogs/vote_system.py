@@ -13,7 +13,7 @@ class UpVoteView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
     
-    @discord.ui.button(label='ㅤ0ㅤ', style=discord.ButtonStyle.red, emoji=discord.PartialEmoji.from_str(Emoji.VOTE), custom_id='vote_to_build')
+    @discord.ui.button(label=None, style=discord.ButtonStyle.red, emoji=discord.PartialEmoji.from_str(Emoji.VOTE), custom_id='vote_to_build')
     async def callback(self, interaction: Interaction, button: discord.ui.Button):
         self.vote_button = button
         try:
@@ -56,19 +56,20 @@ class Vote(commands.Cog):
     @app_commands.command(name='vote', description='❎ Send vote challenge post (admin only)')
     @app_commands.checks.has_permissions(administrator=True)
     @app_commands.guilds(Config.SERVER_ID)
-    @app_commands.describe(picture = 'Picture of building', builder = 'Builder User')
-    async def _vote(self, interaction: discord.Interaction, picture: discord.Attachment, builder: str):
+    @app_commands.describe(picture = 'Picture of building', builder = 'Builder User', instagram_profile = 'Participant\'s Instagram profile', caption = 'Caption of vote')
+    async def _vote(self, interaction: discord.Interaction, picture: discord.Attachment, builder: str, instagram_profile: str, caption: str):
         vote_channel = await interaction.client.fetch_channel(Channel.VOTE)
         vote_model = VoteModel(
             builder=builder,
-            picture_url=picture.url
+            caption=caption,
+            picture_url=picture.url,
+            instagram_profile_url=instagram_profile,
         )
         em = discord.Embed(
-            title=f'**{builder}**',
+            description=f'👤 {builder}\n<:Terms:994313748556808253> {caption}\n[📺 Instagram]({instagram_profile})',
             color=discord.Colour.random(),
         )
         em.set_image(url=picture.url)
-        em.set_footer(text='Choose the build you think is best and vote for your favorite content creator by clicking on the [❤️] button!', icon_url='https://cdn.discordapp.com/attachments/980177765452099654/995383740144549919/twotone_info_white_24dp.png')
         vote_message = await vote_channel.send(embed=em, view=UpVoteView())
 
         vote_model.message_id = vote_message.id
