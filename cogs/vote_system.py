@@ -1,3 +1,4 @@
+from tkinter import Label
 import discord
 import copy
 
@@ -9,9 +10,14 @@ from config import Config, Channel, Emoji
 from utils import success_embed
 
 
-class UpVoteView(discord.ui.View):
-    def __init__(self):
+class VoteView(discord.ui.View):
+    def __init__(self, instagram_url: str):
+        self.instagram_url = instagram_url
         super().__init__(timeout=None)
+
+        self.add_item(
+            discord.ui.Button(label='Instagram', url=self.instagram_url, emoji='📺')
+        )
     
     @discord.ui.button(label=None, style=discord.ButtonStyle.red, emoji=discord.PartialEmoji.from_str(Emoji.VOTE), custom_id='vote_to_build')
     async def callback(self, interaction: Interaction, button: discord.ui.Button):
@@ -51,8 +57,6 @@ class Vote(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
 
-        self.client.add_view(UpVoteView())
-
     @app_commands.command(name='vote', description='❎ Send vote challenge post (admin only)')
     @app_commands.checks.has_permissions(administrator=True)
     @app_commands.guilds(Config.SERVER_ID)
@@ -66,11 +70,11 @@ class Vote(commands.Cog):
             instagram_profile_url=instagram_profile,
         )
         em = discord.Embed(
-            description=f'👤 {builder}\n<:Terms:994313748556808253> {caption}\n[📺 Instagram]({instagram_profile})',
+            description=f'👤 {builder}\n<:Terms:994313748556808253> {caption}',
             color=discord.Colour.random(),
         )
         em.set_image(url=picture.url)
-        vote_message = await vote_channel.send(embed=em, view=UpVoteView())
+        vote_message = await vote_channel.send(embed=em, view=VoteView(instagram_url=instagram_profile))
 
         vote_model.message_id = vote_message.id
         await vote_model.save()
