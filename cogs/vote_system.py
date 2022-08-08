@@ -70,7 +70,7 @@ class Vote(commands.Cog):
             instagram_profile_url=instagram_profile,
         )
         em = discord.Embed(
-            description=f'👤 {builder}\n<:Terms:994313748556808253> {caption}',
+            description=f'👤 {builder}\n\n<:Terms:994313748556808253> {caption}',
             color=discord.Colour.random(),
         )
         em.set_image(url=picture.url)
