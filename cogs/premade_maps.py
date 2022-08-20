@@ -25,13 +25,13 @@ class FollowView(discord.ui.View):
                 try:
                     await member.send(embed=em)
                 except:
-                    await interaction.response.send_message(embed=em, ephemeral=True, delete_after=30.0)
+                    await interaction.response.send_message(embed=em, ephemeral=True)
             else:
                 em = discord.Embed(description=':exclamation: You have already __Followed__ this channel.',color=0xFF0000)
                 try:
                     await member.send(embed=em)
                 except:
-                    await interaction.response.send_message(embed=em, ephemeral=True, delete_after=30.0)
+                    await interaction.response.send_message(embed=em, ephemeral=True)
         if not interaction.response.is_done():
             await interaction.response.defer(ephemeral=True)
 
@@ -82,7 +82,7 @@ class PremadeMap(commands.Cog):
                 color=0xFB005B,
                 description='<a:OK:866760492545343499> ' + des
                 )
-            view = FollowView(self.client)
+            view = FollowView()
             view.add_item(discord.ui.Button(
             label='Download', 
             url=dl_url,
@@ -99,7 +99,7 @@ class PremadeMap(commands.Cog):
     @commands.command(aliases=["sold"])
     async def _sold(self, ctx , id:int = None, img = None):
         '''Change exclusive product to sold: `-sold [Massage ID]`'''
-        channel = self.client.get_channel(Channel.PREMADE_MAPS)
+        channel = self.client.fetch_channel(Channel.PREMADE_MAPS)
         msg = await channel.fetch_message(id)
         if id or img != None:
             if msg.channel == channel:
@@ -113,7 +113,7 @@ class PremadeMap(commands.Cog):
                     )
                 em.set_image(url=img)
                 em.set_footer(text='Press the "Follow" button if you like to get notified when we upload our exclusive maps!')
-                await msg.edit(embed=em, view=FollowView(self.client))
+                await msg.edit(embed=em, view=FollowView())
                 await ctx.reply('> **Product status changed to sold!**')
             else:
                 await ctx.reply(f'> **This product does not exist in the {channel.mention} channel!**')

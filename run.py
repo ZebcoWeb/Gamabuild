@@ -75,4 +75,4 @@ Alright we are ready! - Gama Team
 
 
 if __name__ == '__main__':
-    BotClient().run(Config.TOKEN, log_handler=None)
+    BotClient().run(Config.TOKEN)
