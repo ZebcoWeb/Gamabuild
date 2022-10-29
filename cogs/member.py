@@ -69,9 +69,9 @@ class Member(commands.Cog):
             if member.id not in registered_members and member.bot == False:
                 check_role = member.get_role(Roles.TRAVELER)
                 if check_role:
-                    await MemberModel.join_member(member, verified=True)
+                    await MemberModel.join_member(member, verified=True, client=self.client)
                 else:
-                    await MemberModel.join_member(member)
+                    await MemberModel.join_member(member, client=self.client)
                 members_number += 1
         
         print(f'> {members_number} members added to database.')
@@ -112,7 +112,7 @@ class Member(commands.Cog):
     @commands.Cog.listener('on_member_join')
     async def member_join_handler(self, member):
         invite_channel = await self.client.fetch_channel(Channel.VERIFY)
-        await MemberModel.join_member(member, invite_channel=invite_channel)
+        await MemberModel.join_member(member, client=self.client)
 
         channel = await self.client.guild.fetch_channel(Channel.JOIN_LOG)
         role = self.client.guild.get_role(Roles.NEW)

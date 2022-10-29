@@ -6,7 +6,7 @@ from typing import Optional
 from beanie import Document, Indexed, after_event, Replace 
 from pydantic import Field, conint, BaseModel
 
-from config import Channel
+from config import Channel, Config
 
 class MemberShort(BaseModel):
     member_id: int
@@ -68,14 +68,17 @@ class MemberModel(Document):
         return self.invite_url
 
     @staticmethod
-    async def join_member(member: discord.Member, verified: bool = False):
+    async def join_member(member: discord.Member, verified: bool = False, client: discord.Client = None):
         member_model = await MemberModel.find_one(MemberModel.member_id == member.id)
         if not member_model:
+            activities_channel = await client.fetch_channel(Channel.ACTIVITIES)
             member_model = MemberModel(
                 member_id = member.id,
                 is_verified = verified
             )
+            member_model.gamacoin += Config.INC_COIN_ON_JOIN
             await member_model.save()
+            await activities_channel.send(f"<:CHEST:994300228108828734> ● {member.mention} just got 5 <:GamaCoin:994292311271944274> joining the channel!")
         else:
             member_model.is_leaved = False
             member_model.leaved_at = None

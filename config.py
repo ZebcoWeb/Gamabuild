@@ -26,6 +26,8 @@ class Config:
     MIN_XP_WEEKLY = 100
     MAX_XP_WEEKLY = 200
 
+    INC_COIN_ON_JOIN = 5
+
     GTN_BETS = {
         # bet - guess
         5: {'guess': 3, 'max_number': 25},
