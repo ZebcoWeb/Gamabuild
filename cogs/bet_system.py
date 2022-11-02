@@ -263,7 +263,7 @@ class BetSystem(commands.Cog):
                 color=discord.Color.yellow()
             )
             await interaction.response.send_message(embed=em, ephemeral=True)
-            await log_channel.send(f'🎰 ● {interaction.user.mention} betted **34** <:GamaCoin:994292311271944274> on the Wheel and won {wheel_choice}x Coins!')
+            await log_channel.send(f'🎰 ● {interaction.user.mention} betted **{coin}** <:GamaCoin:994292311271944274> on the Wheel and won {wheel_choice}x Coins!')
         else:
             await interaction.response.send_message(embed=error_embed(f'Your coin is not enough to start the bet. your balance: {member.gamacoin}'), ephemeral=True)
 
