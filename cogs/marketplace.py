@@ -47,7 +47,7 @@ class PurchaseButtom(discord.ui.Button):
 
             else:
                 await interaction.response.send_message(
-                    embed=error_embed(f'''<:Warn:866761211945156628>  You don't have enough Gama Coins **[ 7 <:GamaCoin:994292311271944274>]** to purchase this product.
+                    embed=error_embed(f'''<:Warn:866761211945156628>  You don't have enough Gama Coins **[ {product.price} <:GamaCoin:994292311271944274>]** to purchase this product.
 
 <:CHEST:994300228108828734> ● Check the <#{Channel.ACTIVITIES}> channel to see how you can earn GamaCoins <:GamaCoin:994292311271944274>!
 
