@@ -259,7 +259,7 @@ class BetSystem(commands.Cog):
             await member.save()
             em = discord.Embed(
                 title=f'<:CHEST:994300228108828734> You Got {wheel_choice}x GamaCoins !',
-                description=f'You Bet {coin} <:GamaCoin:994292311271944274> **GamaCoins** And You Won ***{member.gamacoin}** <:GamaCoin:994292311271944274> !!!',
+                description=f'You Bet {coin} <:GamaCoin:994292311271944274> **GamaCoins** And You Won **{member.gamacoin}** <:GamaCoin:994292311271944274> !!!',
                 color=discord.Color.yellow()
             )
             await interaction.response.send_message(embed=em, ephemeral=True)
