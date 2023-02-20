@@ -20,7 +20,7 @@ class AdvertiseModel(Document):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     last_display_dattime: Optional[datetime]
 
-    class Collection:
+    class Settings:
         name = "advertise"
 
     class Config:

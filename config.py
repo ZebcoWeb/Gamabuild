@@ -109,7 +109,7 @@ class Emoji:
 
 
 class DB:
-    HOST = 'localhost'
+    HOST = 'gamabuild.let73sb.mongodb.net'
     USERNAME = 'gamauser'
     PASSWORD = '8rf98hre8439dwqdqw20dwkffewf'
     DATABASE = 'gamabuild'

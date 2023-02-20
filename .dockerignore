@@ -1,2 +1,3 @@
-insta.py
 venv
+__pycache__
+docker-compose.yml

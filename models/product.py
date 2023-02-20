@@ -19,7 +19,7 @@ class ProductModel(Document):
 
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
-    class Collection:
+    class Settings:
         name = "products"
 
     class Config:

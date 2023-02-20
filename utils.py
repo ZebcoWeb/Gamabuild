@@ -55,10 +55,7 @@ def get_guide_number(secret_num: int, guess_num: int, max_number: int):
 async def init_database(loop: asyncio.AbstractEventLoop = None, discord_client: discord.Client = None):
     
     client = motor.motor_asyncio.AsyncIOMotorClient(
-        host=DB.HOST,
-        port=27017,
-        username=DB.USERNAME,
-        password=DB.PASSWORD,
+        f'mongodb+srv://{DB.USERNAME}:{DB.PASSWORD}@{DB.HOST}/?retryWrites=true&w=majority',
         io_loop=loop,
         connectTimeoutMS=10000 # 10 seconds
     )
@@ -81,7 +78,7 @@ async def init_database(loop: asyncio.AbstractEventLoop = None, discord_client: 
             sys.exit(1)
 
     except Exception as e:
-        raise e
+        print(e)
         print('> Could not connect to database!')
         print('> Exiting...')
         sys.exit(1)

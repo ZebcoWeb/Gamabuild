@@ -131,8 +131,8 @@ test.py
 cogs/moderation/main.py
 compressed images
 localazy.exe
-*.json
-*.txt
 
 # Github auction cache
 tmp/
+
+docker-compose.yml

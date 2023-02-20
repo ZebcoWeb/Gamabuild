@@ -69,9 +69,9 @@ class Member(commands.Cog):
             if member.id not in registered_members and member.bot == False:
                 check_role = member.get_role(Roles.TRAVELER)
                 if check_role:
-                    await MemberModel.join_member(member, verified=True, client=self.client)
+                    await MemberModel.join_member(member, verified=True, client=self.client, bulk=True)
                 else:
-                    await MemberModel.join_member(member, client=self.client)
+                    await MemberModel.join_member(member, client=self.client, bulk=True)
                 members_number += 1
         
         print(f'> {members_number} members added to database.')
