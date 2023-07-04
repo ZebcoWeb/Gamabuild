@@ -84,7 +84,7 @@ class PremadeMap(commands.Cog):
                 )
             view = FollowView()
             view.add_item(discord.ui.Button(
-            label='Download', 
+            label='Full Details', 
             url=dl_url,
             emoji=Emoji.DOWNLOAD,
                 )
