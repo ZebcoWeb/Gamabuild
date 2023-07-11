@@ -111,7 +111,7 @@ The section <#789777105201397811> is made specifically for those who wish to ord
             description = help_des,
             color = 0xFB005B
         )
-        embed.set_footer(text= 'GamaBuild' , icon_url='https://media.discordapp.net/attachments/980177765452099654/994267291820769373/Logo.png')
+        embed.set_footer(text= 'GamaBuild test' , icon_url='https://media.discordapp.net/attachments/980177765452099654/994267291820769373/Logo.png')
         
         await ctx.send(embed=embed)
 
