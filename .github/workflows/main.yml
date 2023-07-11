@@ -41,5 +41,5 @@ jobs:
         password: ${{ secrets.SERVER_PASSWORD }}
         script: |
           docker rm -f gamabuild-app || true
-          docker pull gamabuild-app:latest
+          docker pull zebco/gamabuild-app:latest
           docker run -d --name gamabuild-app --restart always --network host -e TOKEN=${{ secrets.GAMABUILD_TOKEN }} zebco/gamabuild-app:latest
