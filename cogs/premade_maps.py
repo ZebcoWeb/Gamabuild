@@ -72,7 +72,6 @@ class PremadeMap(commands.Cog):
             await ctx.reply(f'> `{Config.PREFIX}exclusive [Image Link]^[Download link]`')
         else:
             channel = await self.client.fetch_channel(Channel.PREMADE_MAPS)
-            role_mention = ctx.guild.get_role(Roles.NOTICE)
             argslist = args.split(' ^ ')
             image_url = argslist[0]
             dl_url = argslist[1]
@@ -82,16 +81,16 @@ class PremadeMap(commands.Cog):
                 color=0xFB005B,
                 description='<a:OK:866760492545343499> ' + des
                 )
-            view = FollowView()
-            view.add_item(discord.ui.Button(
-            label='Full Details', 
-            url=dl_url,
-            emoji=Emoji.DOWNLOAD,
+            view = discord.ui.View(timeout=None)
+            view.add_item(
+                discord.ui.Button(
+                    label='Full Details', 
+                    url=dl_url,
+                    emoji=Emoji.DOWNLOAD,
                 )
             )
             em.set_image(url=image_url)
-            em.set_footer(text='Press the "Follow" button if you like to get notified when we upload our exclusive maps!')
-            product = await channel.send(embed=em, view=view, content=f'||{role_mention.mention}||')
+            product = await channel.send(embed=em, view=view, content='||@everyone||')
             await ctx.reply(f'> **Product sent.**\nmsg ID: `{product.id}`')
 
 
