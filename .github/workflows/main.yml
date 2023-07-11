@@ -36,7 +36,7 @@ jobs:
     - name: SSH to server and run Docker container
       uses: appleboy/ssh-action@master
       with:
-        host: $SERVER_IP
+        host: 5.75.187.126
         username: ${{ secrets.SERVER_USERNAME }}
         password: ${{ secrets.SERVER_PASSWORD }}
         script: |
