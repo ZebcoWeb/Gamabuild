@@ -1,6 +1,4 @@
-from tkinter import Label
 import discord
-import copy
 
 from discord.ext import commands
 from discord import app_commands, Interaction
@@ -8,7 +6,6 @@ from discord import app_commands, Interaction
 from models import VoteModel
 from config import Config, Channel, Emoji
 from utils import success_embed, error_embed
-
 
 class VoteView(discord.ui.View):
     def __init__(self, instagram_url: str, initial_vote_number: int = None):

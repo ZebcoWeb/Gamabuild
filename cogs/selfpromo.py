@@ -3,7 +3,7 @@ import re
 
 from discord.ext import commands
 
-from config import Channel
+from config import Channel, Roles
 from models import MemberModel
 from utils import error_embed
 
@@ -33,12 +33,15 @@ class SelfPromo(commands.Cog):
     async def promote_message_handler(self, message: discord.Message):
         if message.channel.id == Channel.SELFPROMO and message.author.bot == False:
             member = await MemberModel.find_one(MemberModel.member_id == message.author.id)
-            if member.level >= 5:
-                urls = re.findall("(?P<url>https?://[^\s]+)", message.content)
-                if len(urls) > 0:
+            urls = re.findall("(?P<url>https?://[^\s]+)", message.content)
+            if len(urls) > 0:
+                if message.author.get_role(Roles.PRIME):
                     await message.delete()
-                    promo_message = await message.channel.send(urls[0], view=SelfPromoView())
-                    await promo_message.delete(delay=43200)
+                    await message.channel.send(urls[0], view=SelfPromoView())
+                    return
+                if member.level >= 5:
+                    await message.delete()
+                    await message.channel.send(urls[0], view=SelfPromoView())
                 else:
                     await message.delete()
             else:

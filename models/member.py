@@ -21,14 +21,14 @@ class MemberModel(Document):
     last_do_daily: Optional[datetime]
     last_do_weekly: Optional[datetime]
 
-    last_level = 1
-    last_jackpot = 0
+    last_level: int = 1
+    last_jackpot: int = 0
 
-    cmd_guess_use = 0
-    cmd_guess_lose = 0
-    cmd_guess_won = 0
+    cmd_guess_use: int = 0
+    cmd_guess_lose: int = 0
+    cmd_guess_won: int = 0
 
-    wheel_use = 0
+    wheel_use: int = 0
 
     invite_url: Optional[str]
 
@@ -46,7 +46,6 @@ class MemberModel(Document):
 
     class Config:
         arbitrary_types_allowed = True
-        underscore_attrs_are_private = True
 
     @property
     def level(self):
