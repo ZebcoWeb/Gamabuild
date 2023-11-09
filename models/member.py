@@ -5,7 +5,7 @@ from typing_extensions import Annotated
 from datetime import datetime
 from typing import Optional
 from beanie import Document, Indexed, after_event, Replace 
-from pydantic import Field, conint, BaseModel
+from pydantic import Field, BaseModel
 
 from config import Channel, Config
 
@@ -15,8 +15,8 @@ class MemberShort(BaseModel):
 class MemberModel(Document):
     member_id: Annotated[int, Indexed(unique=True)]
 
-    gamacoin: conint(ge=0) = 0
-    xp: conint(ge=0) = 0
+    gamacoin: int = 0
+    xp: int = 0
 
     last_do_daily: Optional[datetime]
     last_do_weekly: Optional[datetime]
