@@ -78,7 +78,7 @@ async def init_database(loop: asyncio.AbstractEventLoop = None, discord_client: 
             sys.exit(1)
 
     except Exception as e:
-        print(e)
+        raise e
         print('> Could not connect to database!')
         print('> Exiting...')
         sys.exit(1)
