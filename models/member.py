@@ -1,6 +1,7 @@
 import random
 import discord
 
+from typing_extensions import Annotated
 from datetime import datetime
 from typing import Optional
 from beanie import Document, Indexed, after_event, Replace 
@@ -12,8 +13,7 @@ class MemberShort(BaseModel):
     member_id: int
 
 class MemberModel(Document):
-
-    member_id: Indexed(conint(strict=True), unique=True)
+    member_id: Annotated[int, Indexed(unique=True)]
 
     gamacoin: conint(ge=0) = 0
     xp: conint(ge=0) = 0
@@ -49,11 +49,15 @@ class MemberModel(Document):
 
     @property
     def level(self):
-        return (self.xp // 500) + 1
+        return (self.xp // Config.LEVEL_XP_VALUE) + 1
 
     @property
     def rank(self):
-        return (self.level // 10) + 1
+        return (self.level // Config.RANK_LEVEL_VALUE) + 1
+
+    @property
+    def xp_for_current_level(self):
+        return self.xp % Config.LEVEL_XP_VALUE
 
     async def get_or_create_invite(self, target_channel: discord.TextChannel):
         if not self.invite_url:

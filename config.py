@@ -15,6 +15,9 @@ class Config:
     ]
 
     DISCORD_COLOR = 0x2F3136
+    
+    LEVEL_XP_VALUE = 500
+    RANK_LEVEL_VALUE = 10
 
     INC_XP_CHITCHAT = 5
     INC_XP_MEME = 20

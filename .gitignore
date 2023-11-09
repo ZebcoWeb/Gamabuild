@@ -136,3 +136,4 @@ localazy.exe
 tmp/
 
 docker-compose.yml
+.env

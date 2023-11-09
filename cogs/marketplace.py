@@ -26,6 +26,12 @@ class PurchaseButtom(discord.ui.Button):
     async def callback(self, interaction: discord.Interaction):
         buyer = await MemberModel.find_one(MemberModel.member_id == interaction.user.id)
         product = await ProductModel.find_one(ProductModel.message_id == interaction.message.id, fetch_links=True)
+        if not product:
+            await interaction.response.send_message(
+                embed=error_embed(f'Product not found, Report this to the staff!'),
+                ephemeral=True
+            )
+            return
         if buyer not in product.buyers:
             if buyer.gamacoin >= product.price:
                 product.buyers.append(buyer)

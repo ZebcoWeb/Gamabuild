@@ -28,7 +28,7 @@ class VerifyView(discord.ui.View):
             description = f'ID: ``{member.id}``' ,
             color=0xFB005B
             )
-            em.set_thumbnail(url= member.avatar.url)
+            em.set_thumbnail(url=member.avatar.url if member.avatar else member.default_avatar.url)
             await channel_join.send(embed=em)
             welcome_content = '''
 <:Logo:995257380696760380> **Well Traveler !**
@@ -124,7 +124,7 @@ class Member(commands.Cog):
         description = f'ID: ``{member.id}``' ,
         color=0xFB005B
         )
-        em.set_thumbnail(url=member.avatar.url)
+        em.set_thumbnail(url=member.avatar.url if member.avatar else member.default_avatar.url)
         await channel.send(embed=em)
 
         members_number = 0
@@ -145,7 +145,6 @@ class Member(commands.Cog):
         description = f'ID: ``{member.id}``' ,
         color=0xFB005B
         )
-        # em.set_thumbnail(url= member.avatar.url)
         await channel.send(embed=em)
 
         members_number = 0

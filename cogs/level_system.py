@@ -22,11 +22,10 @@ class LevelSystem(commands.Cog):
                 await MemberModel.find_one(MemberModel.member_id == message.author.id).inc({MemberModel.xp: Config.INC_XP_CHITCHAT})
     
 
-    @commands.Cog.listener('on_guild_update')
+    @commands.Cog.listener('on_member_update')
     async def increase_xp_boost(self, before: discord.Guild, after: discord.Guild):
-        if before.premium_subscription_count < after.premium_subscription_count:
-            booster = [i for i in after.premium_subscribers if i not in before.premium_subscribers]
-            await MemberModel.find_one(MemberModel.member_id == booster[0]).inc({MemberModel.xp: Config.INC_XP_BOOST})
+        if before.premium_since is None and after.premium_since is not None:
+            await MemberModel.find_one(MemberModel.member_id == after.id).inc({MemberModel.xp: Config.INC_XP_BOOST})
     
 
     @app_commands.command(name='daily', description='🎁 Get daily xp reward')
