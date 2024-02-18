@@ -87,7 +87,7 @@ def init_cache():
 
     rom.util.set_connection_settings(
         host='localhost',
-        port=6379,
+        port=6380,
         db=0,
     )
     client = rom.util.get_connection()
