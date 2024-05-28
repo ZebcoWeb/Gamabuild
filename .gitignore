@@ -135,5 +135,4 @@ localazy.exe
 # Github auction cache
 tmp/
 
-docker-compose.yml
 .env

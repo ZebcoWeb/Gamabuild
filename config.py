@@ -15,7 +15,7 @@ class Config:
     ]
 
     DISCORD_COLOR = 0x2F3136
-    
+
     LEVEL_XP_VALUE = 500
     RANK_LEVEL_VALUE = 10
 
@@ -63,16 +63,16 @@ class Roles:
     PRIME = 996408538010230824
     NOTICE = 866976860625043456
     OPTIONAL_ROLES = [
-    (981943526789107742, '🏃'),
-    (981943879920128000, '👷‍♂️'), 
-    (981943988695220334, '⚡'), 
-    (981944083872358440, '🧑‍💻'), 
-    (981944176004452473, '🛠️'), 
-    (981944263854153789, '👽'),
-    (981944460961280060, '😳'), 
-    (981944311056846890, '🏕️'), 
-    (981944408742166538, '☠️'), 
-    (981943694221525092, '⚔️')
+        (981943526789107742, '🏃'),
+        (981943879920128000, '👷‍♂️'),
+        (981943988695220334, '⚡'),
+        (981944083872358440, '🧑‍💻'),
+        (981944176004452473, '🛠️'),
+        (981944263854153789, '👽'),
+        (981944460961280060, '😳'),
+        (981944311056846890, '🏕️'),
+        (981944408742166538, '☠️'),
+        (981943694221525092, '⚔️')
     ]
 
     ROLES_MARKER = 982656124639649872
@@ -103,6 +103,7 @@ class Channel:
     FAQ = 769856762190102528
     VOTE = 1005366378959732816
 
+
 class Emoji:
     VERIFY = '<:verifyy:867000676452925450>'
     FOLLOW = '<:notiff:867001613990363159>'
@@ -113,7 +114,13 @@ class Emoji:
 
 
 class DB:
-    HOST = 'gamabuild.let73sb.mongodb.net'
-    USERNAME = 'gamauser'
-    PASSWORD = '8rf98hre8439dwqdqw20dwkffewf'
-    DATABASE = 'gamabuild'
+    HOST = os.getenv("DB_HOST")
+    USERNAME = os.getenv("DB_USERNAME")
+    PASSWORD = os.getenv("DB_PASSWORD")
+    NAME = os.getenv("DB_DATABASE")
+
+
+class Redis:
+    HOST = os.getenv("REDIS_HOST")
+    PORT = os.getenv("REDIS_PORT")
+    DB = 0
