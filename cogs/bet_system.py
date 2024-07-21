@@ -20,13 +20,14 @@ class GTNModal(discord.ui.Modal):
         self.max_number = max_number
 
         self.guess = discord.ui.TextInput(
-                label='Number', 
-                placeholder=f'Enter a number between 1 and {self.max_number}'
+            label='Number',
+            placeholder=f'Enter a number between 1 and {self.max_number}'
         )
         self.add_item(self.guess)
-    
+
     async def lose_callback(self, interaction: discord.Interaction, user_guess: int):
-        guide_num, guide_msg = get_guide_number(self.view.secret_number, user_guess, self.max_number)
+        guide_num, guide_msg = get_guide_number(
+            self.view.secret_number, user_guess, self.max_number)
 
         if not self.view.first_guide_number and self.view.lose_time == 2 and self.view.member_model.cmd_guess_use == 0 and self.view.bet <= 15:
             print(guide_num)
@@ -40,7 +41,7 @@ class GTNModal(discord.ui.Modal):
             await self.view.member_model.save()
 
             await interaction.response.edit_message(
-                content=f'🙁 Your chance to guess the secret number is over! You lost **{self.view.bet}** coin. The secret number was **{self.view.secret_number}**, ***Try later***', 
+                content=f'🙁 Your chance to guess the secret number is over! You lost **{self.view.bet}** coin. The secret number was **{self.view.secret_number}**, ***Try later***',
                 embed=None,
                 view=None,
             )
@@ -48,13 +49,15 @@ class GTNModal(discord.ui.Modal):
             self.view.guess -= 1
             self.view.lose_time += 1
             em = discord.Embed(
-            title=f'**{self.view.bet} GamaCoins** Are On The Line !',
-            description=f'❓● Guess The Correct Number To **Double** Your Coins \n\n> {guide_msg}',
-            color=discord.Color.yellow()
+                title=f'**{self.view.bet} GamaCoins** Are On The Line !',
+                description=f'❓● Guess The Correct Number To **Double** Your Coins \n\n> {guide_msg}',
+                color=discord.Color.yellow()
             )
-            em.add_field(name='<:questionmark:994300948295983265> **Guesses Left**', value=f'**{self.view.guess}**', inline=True)
+            em.add_field(name='<:questionmark:994300948295983265> **Guesses Left**',
+                         value=f'**{self.view.guess}**', inline=True)
             em.add_field(name='\u200b', value=f'\u200b', inline=True)
-            em.add_field(name='<:lock:994508434554761216> **Number range**', value=f'between 1 & {self.view.max_number}', inline=True)
+            em.add_field(name='<:lock:994508434554761216> **Number range**',
+                         value=f'between 1 & {self.view.max_number}', inline=True)
             await interaction.response.edit_message(embed=em)
 
     async def won_callback(self, interaction: discord.Interaction):
@@ -98,7 +101,7 @@ class GTNModal(discord.ui.Modal):
                 await interaction.response.send_message(embed=error_embed(f'Please enter a number between 1 and {self.max_number}'), ephemeral=True)
         else:
             await interaction.response.send_message(embed=error_embed('Please enter a number!'), ephemeral=True)
-    
+
 
 class GTNBetView(discord.ui.View):
     def __init__(self, max_number, guess, bet, member_model):
@@ -121,6 +124,7 @@ class GTNBet(discord.ui.Button):
             style=discord.ButtonStyle.green,
             custom_id='gtn_bet_button'
         )
+
     async def callback(self, interaction: discord.Interaction):
         await interaction.response.send_modal(GTNModal(self.view, self.view.max_number))
 
@@ -130,7 +134,8 @@ class GTNStartView(discord.ui.View):
         super().__init__(timeout=None)
         self.add_item(GTNStartSelect())
 
-class GTNStartSelect(discord.ui.Select): 
+
+class GTNStartSelect(discord.ui.Select):
 
     gtn_bets_entry = list(Config.GTN_BETS.keys())
 
@@ -139,14 +144,14 @@ class GTNStartSelect(discord.ui.Select):
             placeholder='Enter your bet to start',
             custom_id='gtn_bet_entry',
         )
-        
+
         for bet in self.gtn_bets_entry:
             self.add_option(
                 label=f'{bet} Coin',
                 value=str(bet),
                 emoji='<:GamaCoin:994292311271944274>',
             )
-        
+
     async def callback(self, interaction: discord.Interaction):
         bet = int(self.values[0])
         guess_time = Config.GTN_BETS[bet]['guess']
@@ -158,23 +163,26 @@ class GTNStartSelect(discord.ui.Select):
             description='❓● Guess The Correct Number To **Double** Your Coins\n\u200b',
             color=discord.Color.yellow()
         )
-        em.add_field(name='<:questionmark:994300948295983265> **Guesses Left**', value=f'**{guess_time}**', inline=True)
+        em.add_field(name='<:questionmark:994300948295983265> **Guesses Left**',
+                     value=f'**{guess_time}**', inline=True)
         em.add_field(name='\u200b', value=f'\u200b', inline=True)
-        em.add_field(name='<:lock:994508434554761216> **Number range**', value=f'between 1 & {max_number}', inline=True)
+        em.add_field(name='<:lock:994508434554761216> **Number range**',
+                     value=f'between 1 & {max_number}', inline=True)
         await interaction.response.edit_message(content=None, embed=em, view=GTNBetView(max_number, guess_time, bet, member_model))
+
 
 class WheelCoinForm(discord.ui.Modal):
     def __init__(self, cog):
         super().__init__(
-            title='Wheel Coin', 
+            title='Wheel Coin',
             timeout=None
         )
         self.cog = cog
 
-        self.coin = discord.ui.TextInput(label='Coin', placeholder='Enter your coin to bet', style=discord.TextStyle.short, min_length=1)
+        self.coin = discord.ui.TextInput(
+            label='Coin', placeholder='Enter your coin to bet', style=discord.TextStyle.short, min_length=1)
         self.coin.callback = self.on_submit
         self.add_item(self.coin)
-
 
     async def on_submit(self, interaction: discord.Interaction):
         if re.match(r'^[0-9]+$', self.coin.value):
@@ -182,6 +190,7 @@ class WheelCoinForm(discord.ui.Modal):
             await self.cog.start_wheel(interaction, coin)
         else:
             await interaction.response.send_message(embed=error_embed('Please enter a number!'), ephemeral=True)
+
 
 class GamesMenuView(discord.ui.View):
     def __init__(self, cog: commands.Cog):
@@ -220,18 +229,16 @@ class BetSystem(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client: commands.Bot = client
 
-
         self.client.add_view(GamesMenuView(self))
 
         self.last_activities_message = None
         self.activities_guide_message.start()
-        
+
         self.coefficients = []
         self.weights = []
         for c, w in Config.WHEEL_BETS:
             self.coefficients.append(c)
             self.weights.append(w)
-    
 
     async def start_guessthenumber(self, interaction: discord.Interaction):
         member: MemberModel = await MemberModel.find_one(MemberModel.member_id == interaction.user.id)
@@ -244,7 +251,6 @@ class BetSystem(commands.Cog):
         else:
             await interaction.response.send_message(f'❗You need at least 5 Coin to play', ephemeral=True)
 
-
     async def start_wheel(self, interaction: discord.Interaction, coin: int = None):
         member = await MemberModel.find_one(MemberModel.member_id == interaction.user.id)
         if member.gamacoin >= coin:
@@ -252,14 +258,16 @@ class BetSystem(commands.Cog):
             if member.wheel_use == 0 and coin <= 50:
                 wheel_choice = 1.5
             else:
-                wheel_choice = random.choices(self.coefficients, self.weights, k=1)[0]
-            member.gamacoin = member.gamacoin - coin + (coin * wheel_choice)
+                wheel_choice = random.choices(
+                    self.coefficients, self.weights, k=1)[0]
+            won_coin = round(coin * wheel_choice)
+            member.gamacoin = member.gamacoin - coin + won_coin
             member.wheel_use += 1
             member.xp += 50
             await member.save()
             em = discord.Embed(
                 title=f'<:CHEST:994300228108828734> You Got {wheel_choice}x GamaCoins !',
-                description=f'You Bet {coin} <:GamaCoin:994292311271944274> **GamaCoins** And You Won **{member.gamacoin}** <:GamaCoin:994292311271944274> !!!',
+                description=f'You Bet {coin} <:GamaCoin:994292311271944274> **GamaCoins** And You Won **{won_coin}** <:GamaCoin:994292311271944274> !!!',
                 color=discord.Color.yellow()
             )
             await interaction.response.send_message(embed=em, ephemeral=True)
@@ -267,7 +275,6 @@ class BetSystem(commands.Cog):
         else:
             await interaction.response.send_message(embed=error_embed(f'Your coin is not enough to start the bet. your balance: {member.gamacoin}'), ephemeral=True)
 
-    
     async def profile(self, interaction: discord.Interaction):
         member = await MemberModel.find_one(MemberModel.member_id == interaction.user.id)
         verify_channel = await self.client.fetch_channel(Channel.VERIFY)
@@ -276,16 +283,18 @@ class BetSystem(commands.Cog):
             description=f'<:stats:994300647082041534> Level {member.level} | <:rank:994510151824453682> Rank {member.rank}\n\u200b',
             color=0xff2a65
         )
-        em.add_field(name='<:CHEST:994300228108828734> **Gamacoin**', value=f'{member.gamacoin} Coin', inline=True)
+        em.add_field(name='<:CHEST:994300228108828734> **Gamacoin**',
+                     value=f'{member.gamacoin} Coin', inline=True)
         em.add_field(name='\u200b', value=f'\u200b', inline=True)
-        em.add_field(name='<:LevelUP:994295516206735440> **XP**', value=f'{member.xp_for_current_level} / 500', inline=True)
+        em.add_field(name='<:LevelUP:994295516206735440> **XP**',
+                     value=f'{member.xp_for_current_level} / 500', inline=True)
         em.add_field(name='<:Entertainment:994294738566008872> **Your Custom Invite Link:**', value=f'{await member.get_or_create_invite(verify_channel)}', inline=False)
         em.set_thumbnail(url=interaction.user.avatar.url)
         await interaction.response.send_message(embed=em, ephemeral=True)
 
     @app_commands.command(name='guess', description='🤔 Guess the secret number | 2x Coin')
     @app_commands.guilds(Config.SERVER_ID)
-    @app_commands.checks.cooldown(1, 43200) # 12 hours
+    @app_commands.checks.cooldown(1, 43200)  # 12 hours
     async def guessthenumber(self, interaction: discord.Interaction):
         await self.start_guessthenumber(interaction)
 
@@ -296,7 +305,7 @@ class BetSystem(commands.Cog):
 
     @app_commands.command(name='wheel', description='🎡 Put your money on the wheel of chance | 5x')
     @app_commands.guilds(Config.SERVER_ID)
-    @app_commands.checks.cooldown(1, 7200) # 2 hours
+    @app_commands.checks.cooldown(1, 7200)  # 2 hours
     @app_commands.describe(coin='How much coins do you use to bet?')
     async def wheel(self, interaction: discord.Interaction, coin: int):
         await self.start_wheel(interaction, coin)
@@ -341,21 +350,24 @@ class BetSystem(commands.Cog):
 <:questionmark:994300948295983265> ● for more info click the help button!''',
             color=0xff2a65
         )
-        em.set_image(url='https://cdn.discordapp.com/attachments/980177765452099654/994309417124237432/MiniGames.png')
-        em.set_footer(text= 'GamaBuild' , icon_url='https://media.discordapp.net/attachments/980177765452099654/994267291820769373/Logo.png')
+        em.set_image(
+            url='https://cdn.discordapp.com/attachments/980177765452099654/994309417124237432/MiniGames.png')
+        em.set_footer(
+            text='GamaBuild', icon_url='https://media.discordapp.net/attachments/980177765452099654/994267291820769373/Logo.png')
         await casino_channel.send(embed=em, view=GamesMenuView(cog=self))
         await ctx.reply(embed=success_embed('Games context sent'))
 
     @tasks.loop(hours=6)
     async def activities_guide_message(self):
         channel = await self.client.fetch_channel(Channel.ACTIVITIES)
-        
+
         if self.last_activities_message:
             await self.last_activities_message.delete()
 
-        message = await channel.send(content=f'''
-**▬▬▬[How to gain xp]▬▬▬**
-
+        em_1 = discord.Embed(
+            title='How to gain Gama Coins?!',
+            color=discord.Colour.yellow(),
+            description=f'''
 :speech_balloon: ● By chatting in the <#{Channel.CHITCHAT}> you can gain **xp** .
 <:add:994525256289108069> ● You can gain **xp** by inviting your friends .
 :rocket: ● Boosting the server also boosts your **experience** and gives you more **Gama Coins** <:GamaCoin:994292311271944274>.
@@ -363,18 +375,27 @@ class BetSystem(commands.Cog):
 <:Games:994293396128673852> ● Playing games in the <#{Channel.CASINO}> channel gives you xp .
 :performing_arts: ● You can also gain xp from posting memes in the <#{Channel.MEME}> channel .
 :gift: ● Every day/week you can gain **xp** by typing /daily - /weekly in the <#{Channel.ACTIVITIES}> channel .
-
-**▬▬▬[How to gain Gama Coins]▬▬▬**
-
-<:stats:994300647082041534> ● Each time you level up you gain **1 - 7 Gama Coins** <:GamaCoin:994292311271944274>.
-<:rank:994510151824453682> ● Every 10 level you rank up and you get a chance for the jackpot which contains a mass amount of **Gama Coins** <:GamaCoin:994292311271944274>.
-:game_die: ● You can earn **Gama Coins** <:GamaCoin:994292311271944274> by gambling them in the <#{Channel.CASINO}> channel .
-<:Microphone:789798501332156446> ● Custom Events/Tournaments/Giveaways also contain **Gama Coins** <:GamaCoin:994292311271944274> as prizes .
-
-**You can also check your stats by clicking on the :bust_in_silhouette: Profile button in the <#{Channel.CASINO}> channel ! **'''
+'''
         )
+        em_2 = discord.Embed(
+            title='How to gain Gama Coin?!',
+            color=discord.Colour.yellow(),
+            description=f'''
+:speech_balloon: ● By chatting in the <#{Channel.CHITCHAT}> you can gain **xp** .
+<:add:994525256289108069> ● You can gain **xp** by inviting your friends .
+:rocket: ● Boosting the server also boosts your **experience** and gives you more **Gama Coins** <:GamaCoin:994292311271944274>.
+:microphone: ● Every minute that you spend in a public/private voice channel gives you **xp** .
+<:Games:994293396128673852> ● Playing games in the <#{Channel.CASINO}> channel gives you xp .
+:performing_arts: ● You can also gain xp from posting memes in the <#{Channel.MEME}> channel .
+:gift: ● Every day/week you can gain **xp** by typing /daily - /weekly in the <#{Channel.ACTIVITIES}> channel .
+'''
+        )
+        em_2.set_footer(text='GamaBuild Team',
+                        icon_url=self.client.user.avatar.url)
+
+        message = await channel.send(embeds=[em_1, em_2])
         self.last_activities_message = message
-        
+
 
 async def setup(client: commands.Bot):
     await client.add_cog(BetSystem(client))

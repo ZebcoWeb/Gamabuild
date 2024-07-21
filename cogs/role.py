@@ -89,7 +89,7 @@ class Role(commands.Cog):
                 index = 0
                 str = ''
 
-        embed.set_footer(text= 'GamaBuild Team' , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
+        embed.set_footer(text= 'GamaBuild Team' , icon_url=self.client.user.avatar.url)
         await channel.send(embed=embed, view=SetRoleView())
         await ctx.reply('> **Set role message sended!**')
 

@@ -4,13 +4,15 @@ import discord
 from typing_extensions import Annotated
 from datetime import datetime
 from typing import Optional
-from beanie import Document, Indexed, after_event, Replace 
+from beanie import Document, Indexed, after_event, Replace
 from pydantic import Field, BaseModel
 
 from config import Channel, Config
 
+
 class MemberShort(BaseModel):
     member_id: int
+
 
 class MemberModel(Document):
     member_id: Annotated[int, Indexed(unique=True)]
@@ -18,8 +20,8 @@ class MemberModel(Document):
     gamacoin: int = 0
     xp: int = 0
 
-    last_do_daily: Optional[datetime]
-    last_do_weekly: Optional[datetime]
+    last_do_daily: Optional[datetime] = None
+    last_do_weekly: Optional[datetime] = None
 
     last_level: int = 1
     last_jackpot: int = 0
@@ -30,16 +32,15 @@ class MemberModel(Document):
 
     wheel_use: int = 0
 
-    invite_url: Optional[str]
+    invite_url: Optional[str] = None
 
     is_verified: bool = False
     is_staff: bool = False
     is_power: bool = True
     is_leaved: bool = False
 
-    leaved_at: Optional[datetime]
+    leaved_at: Optional[datetime] = None
     crated_at: datetime = Field(default_factory=datetime.utcnow)
-
 
     class Settings:
         name = "members"
@@ -62,7 +63,7 @@ class MemberModel(Document):
     async def get_or_create_invite(self, target_channel: discord.TextChannel):
         if not self.invite_url:
             invite = await target_channel.create_invite(
-                max_age=0, 
+                max_age=0,
                 max_uses=0,
                 unique=True,
             )
@@ -75,8 +76,8 @@ class MemberModel(Document):
         member_model = await MemberModel.find_one(MemberModel.member_id == member.id)
         if not member_model:
             member_model = MemberModel(
-                member_id = member.id,
-                is_verified = verified
+                member_id=member.id,
+                is_verified=verified
             )
             member_model.gamacoin += Config.INC_COIN_ON_JOIN
             await member_model.save()
@@ -87,7 +88,7 @@ class MemberModel(Document):
             member_model.is_leaved = False
             member_model.leaved_at = None
             await member_model.save()
-    
+
     @staticmethod
     async def leave_member(member: discord.Member):
         if not member.bot:

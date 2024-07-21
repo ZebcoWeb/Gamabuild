@@ -5,11 +5,12 @@ from discord.ext import commands
 
 from config import Channel, Config
 
+
 class TicketMenu(discord.ui.Select):
     def __init__(self):
         super().__init__(
             custom_id='ticket_menu',
-            placeholder='Select one of the sections...', 
+            placeholder='Select one of the sections...',
             options=self.ticket_options(),
         )
 
@@ -17,13 +18,13 @@ class TicketMenu(discord.ui.Select):
         options = []
         for section, emoji in Config.TICKET_SECTIONS:
             options.append(discord.SelectOption(
-                    label=section,
-                    value=emoji + ' ' + section,
-                    emoji=emoji
-                )
+                label=section,
+                value=emoji + ' ' + section,
+                emoji=emoji
+            )
             )
         return options
-        
+
     async def callback(self, interaction: discord.Interaction):
         if len(self.values) > 0:
             member = interaction.user
@@ -36,10 +37,10 @@ class TicketMenu(discord.ui.Select):
                 guild.me: discord.PermissionOverwrite(read_messages=True),
                 member: discord.PermissionOverwrite(read_messages=True)
             }
-            title = '╠ '+ f'{section_value[0]} ' + member.name
+            title = '╠ ' + f'{section_value[0]} ' + member.name
             previous_channel = await interaction.client.fetch_channel(Channel.PREVIOUS_PROJECTS)
             ticket_channel = await category.create_text_channel(
-                title, 
+                title,
                 overwrites=overwrites,
                 position=previous_channel.position - 1,
             )
@@ -50,11 +51,13 @@ class TicketMenu(discord.ui.Select):
                 color=0xFB005B
             )
             embed.set_thumbnail(url=member.avatar.url)
-            embed.set_footer(text="GamaBuild" , icon_url='https://media.discordapp.net/attachments/980177765452099654/994267291820769373/Logo.png')
+            embed.set_footer(
+                text="GamaBuild", icon_url='https://media.discordapp.net/attachments/980177765452099654/994267291820769373/Logo.png')
             await ticket_channel.send(embed=embed, content=member.mention)
             await interaction.response.edit_message(view=TicketView())
         else:
             await interaction.response.defer()
+
 
 class TicketView(discord.ui.View):
     def __init__(self):
@@ -67,7 +70,7 @@ class Ticket(commands.Cog):
         self.client = client
 
         self.client.add_view(TicketView())
-    
+
     @commands.has_permissions(manage_guild=True)
     @commands.command(aliases=["ticket"])
     async def _ticket(self, ctx):
@@ -85,11 +88,13 @@ class Ticket(commands.Cog):
 <:Terms:994313748556808253> ● Make sure to read the {term.mention} of service before opening a ticket!''',
             color=0xFB005B
         )
-        embed.set_image(url='https://cdn.discordapp.com/attachments/980177765452099654/994311395787161620/Ticket.png')
-        embed.set_footer(text= 'GamaBuild' , icon_url='https://media.discordapp.net/attachments/980177765452099654/994267291820769373/Logo.png')
+        embed.set_image(
+            url='https://cdn.discordapp.com/attachments/980177765452099654/994311395787161620/Ticket.png')
+        embed.set_footer(
+            text='GamaBuild', icon_url='https://media.discordapp.net/attachments/980177765452099654/994267291820769373/Logo.png')
         await channel.send(embed=embed, view=TicketView())
         await ctx.reply('> **Ticket has been made!**')
-    
+
     @commands.has_permissions(manage_guild=True)
     @commands.command()
     async def close(self, ctx, mode: str = None):
@@ -108,7 +113,8 @@ class Ticket(commands.Cog):
                 embed.description = "We are closing this ticket automatically in 24 hours..."
                 CLOSE_DELAY = 86400
 
-            embed.set_footer(text="GamaBuild Team" , icon_url='https://cdn.discordapp.com/attachments/841291473332207662/841736355847077888/Gama.png')
+            embed.set_footer(text="GamaBuild Team",
+                             icon_url=self.client.user.avatar.url)
             msg = await ctx.send(embed=embed)
             await msg.add_reaction("\U0001f1f9")
             await asyncio.sleep(1)
