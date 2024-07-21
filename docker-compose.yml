@@ -17,8 +17,6 @@ services:
   redis:
     container_name: redis-gamabuild
     image: "redis:latest"
-    ports:
-      - "6379:6379"
     restart: always
     networks:
       - gama-network
