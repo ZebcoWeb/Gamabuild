@@ -11,7 +11,8 @@ services:
     restart: always
     env_file:
       - .env
-    network_mode: "host"
+    networks:
+      - onyx-network
     
   redis:
     container_name: redis-gamabuild
@@ -19,3 +20,9 @@ services:
     ports:
       - "6379:6379"
     restart: always
+    networks:
+      - gama-network
+
+networks:
+  gama-network:
+    driver: bridge
