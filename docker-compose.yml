@@ -12,7 +12,7 @@ services:
     env_file:
       - .env
     networks:
-      - onyx-network
+      - gama-network
     
   redis:
     container_name: redis-gamabuild
